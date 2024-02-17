@@ -1,21 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2024/02/06/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+    <title>怎么找到一个想要的开源项目</title>
+    <url>/2024/02/17/howToFindAOpensourceProject/</url>
+    <content><![CDATA[<p>本篇文章主要记录本人查找相关开源项目的经验，鉴于本人水平有限，仍在进步中，后续会对本文内容进行进一步的修改与更新。</p>
+<span id="more"></span>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>在GitHub上存在着许多非常有价值的开源项目以及记录开发者经验的仓库。而开源项目本身可以给我们的学习过程带来一定的参考和帮助。而除此之外，我们也可以通过借鉴或使用这些开源项目来实现我们自己的项目开发。</p>
+<p>在此，我觉得非常有必要推荐一个gitbook<a href="https://zhuangbiaowei.gitbook.io/learn-with-open-source/">Learn Coding with Open Source</a>，在这本书里面比较详尽的介绍了怎么去借助开源项目来学习项目的开发（不过里面的有些例子可能有一些过时了，需要结合当前自己的需求进行判断）。</p>
+<p>就目前而言，我所倾向于的寻找开源项目的开源社区是GitHub。不过在我们正式去找一个开源项目进行软件架构的分析、项目的复现以及进一步的使用和拓展之前，我们需要确定一下我们的需求和兴趣所在。我们大可以先去搜索引擎查找相关的技术话题或者是说自己希望提升的方向，通过这些大致的话题总结出我们所需要的关键词——这可能比较花费时间，因为我们需要从海量的信息中去查找一些有价值的信息。不过呢，我们也可以去关注一些大牛、科技公司的的博客、公众号和视频号（直接站在巨人的肩膀上好像更省力一点）。甚至还可以去知乎、stackflow这些技术问答网站来请人推荐几个项目…</p>
+<p>不过，在上面的gitbook也谈到了,</p>
+<blockquote>
+<p>“github中有人总结过各个语言在不同的应用方向上值得推荐的开源项目列表, 即Awesome List. Awesome List不仅可以方便大家找到优秀的项目进行学习, 还可以让大家方便地找到各种已有的轮子来进行开发”</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>语言&#x2F;平台</th>
+<th>Awesome List 地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Java</td>
+<td><a href="https://github.com/akullpp/awesome-java">awesome-java</a></td>
+</tr>
+<tr>
+<td>c++</td>
+<td><a href="https://github.com/fffaraz/awesome-cpp">awesome-cpp</a></td>
+</tr>
+<tr>
+<td>python</td>
+<td><a href="https://github.com/vinta/awesome-python">awesome-python</a></td>
+</tr>
+<tr>
+<td>go</td>
+<td><a href="https://github.com/avelino/awesome-go">awesome-go</a></td>
+</tr>
+<tr>
+<td>javascript(浏览器)</td>
+<td><a href="https://github.com/sorrycc/awesome-javascript">awesome-javascript</a></td>
+</tr>
+<tr>
+<td>nodejs</td>
+<td><a href="https://github.com/sindresorhus/awesome-nodejs">awesome-nodejs</a></td>
+</tr>
+<tr>
+<td>.net</td>
+<td><a href="https://github.com/quozd/awesome-dotnet">awesome-dotnet</a></td>
+</tr>
+<tr>
+<td>.net core</td>
+<td><a href="https://github.com/thangchung/awesome-dotnet-core">awesome-dotnet-core</a></td>
+</tr>
+<tr>
+<td>ruby</td>
+<td><a href="https://github.com/markets/awesome-ruby">awesome-ruby</a></td>
+</tr>
+<tr>
+<td>php</td>
+<td><a href="https://github.com/ziadoz/awesome-php">awesome-php</a></td>
+</tr>
+<tr>
+<td>rust</td>
+<td><a href="https://github.com/rust-unofficial/awesome-rust">awesome-rust</a></td>
+</tr>
+<tr>
+<td>dart</td>
+<td><a href="https://github.com/yissachar/awesome-dart">awesome-dart</a></td>
+</tr>
+<tr>
+<td>ios(Objective-C和swift)</td>
+<td><a href="https://github.com/vsouza/awesome-ios">awesome-ios</a></td>
+</tr>
+<tr>
+<td>android</td>
+<td><a href="https://github.com/snowdream/awesome-android">awesome-android</a></td>
+</tr>
+</tbody></table>
+<h1 id="Example1"><a href="#Example1" class="headerlink" title="Example1"></a>Example1</h1><p>而以下则是一个寻找开源项目的例子的记录。在这个例子中，我需要完成基于数据湖、向量数据库、索引技术和领域大模型的一个项目。所以，我首先希望去查找一些较为成熟或是具有参考价值的项目，从而形成我对于项目实际开发的技术路线的思考。</p>
 ]]></content>
+      <categories>
+        <category>tips</category>
+      </categories>
+      <tags>
+        <tag>Github</tag>
+        <tag>tip</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>os_lab_1</title>
+    <url>/2024/02/15/os-lab-1/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>OS</category>
+        <category>Lab</category>
+      </categories>
+      <tags>
+        <tag>CS</tag>
+        <tag>OS</tag>
+        <tag>Lab</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>6.S081-note-lec1</title>
+    <url>/2024/02/15/6.S081-note-lec1/</url>
+    <content><![CDATA[<p>本篇文章为对xv6-book-rev2的第一章的阅读笔记（主要内容为rev2的翻译理解）以及针对6.S081-2020-Lec1的笔记。</p>
+<span id="more"></span>
+
+<h1 id="操作系统接口"><a href="#操作系统接口" class="headerlink" title="操作系统接口"></a>操作系统接口</h1><p>操作系统的工作包括将计算机资源分享给多个程序，并提供比硬件本身支持更有用的服务。它管理和抽象底层的硬件，使应用程序无需关心使用的是哪种类型的磁盘硬件。然后，操作系统将硬件资源分享给多个程序，使它们能够同时运行或表现出同时运行的状态。最后，操作系统提供受限的方式让程序进行交互，以便它们能够共享数据或共同工作。</p>
+<p>操作系统通过接口向用户程序提供服务。设计一个好的接口是困难的，一方面，我们希望接口简单且窄，因为这样更容易使得我们的实现是正确的；另一方面，我们可能会倾向于为应用程序提供许多复杂的功能。而解决这种紧张关系的诀窍就在于设计一些依赖于少量机制的接口，而这些机制可以组合在一起提供很多的通用性。</p>
+<p><img src="/images/fig1.1.png" alt="fig1.1"></p>
+<p>xv6采用了传统的内核(kernel)形式——为程序运行提供服务的一种特殊程序。而每个运行中的程序——即进程，它有包含了指令、数据和栈的一片内存。指令实现了程序的计算过程，而数据就是程序执行过程中的那些变量。对于栈来说，它实际上是用来将程序的存储过程调用组织起来。一般而言，一个计算机有多个进程而只有一个内核。</p>
+<p>当进程需要调用内核服务时，它会调用系统调用，即操作系统接口中的一个调用。系统调用进入内核；内核执行服务并返回。因此，进程在用户空间和内核空间中交替执行。而对于用户程序而言，它们仅能看到内核所提供的系统调用接口，而无法看到这些接口的实现细节。如下为xv6所实现的系统调用：</p>
+<table>
+<thead>
+<tr>
+<th><strong>系统调用</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int fork()</code></td>
+<td>创建一个进程，返回子进程的PID</td>
+</tr>
+<tr>
+<td><code>int exit(int status)</code></td>
+<td>终止当前进程，并将状态报告给wait()函数。无返回</td>
+</tr>
+<tr>
+<td><code>int wait(int *status)</code></td>
+<td>等待一个子进程退出; 将退出状态存入*status; 返回子进程PID。</td>
+</tr>
+<tr>
+<td><code>int kill(int pid)</code></td>
+<td>终止对应PID的进程，返回0，或返回-1表示错误</td>
+</tr>
+<tr>
+<td><code>int getpid()</code></td>
+<td>返回当前进程的PID</td>
+</tr>
+<tr>
+<td><code>int sleep(int n)</code></td>
+<td>暂停n个时钟节拍</td>
+</tr>
+<tr>
+<td><code>int exec(char *file, char *argv[])</code></td>
+<td>加载一个文件并使用参数执行它; 只有在出错时才返回</td>
+</tr>
+<tr>
+<td><code>char *sbrk(int n)</code></td>
+<td>按n 字节增长进程的内存。返回新内存的开始</td>
+</tr>
+<tr>
+<td><code>int open(char *file, int flags)</code></td>
+<td>打开一个文件；flags表示read&#x2F;write；返回一个fd（文件描述符）</td>
+</tr>
+<tr>
+<td><code>int write(int fd, char *buf, int n)</code></td>
+<td>从buf 写n 个字节到文件描述符fd; 返回n</td>
+</tr>
+<tr>
+<td><code>int read(int fd, char *buf, int n)</code></td>
+<td>将n 个字节读入buf；返回读取的字节数；如果文件结束，返回0</td>
+</tr>
+<tr>
+<td><code>int close(int fd)</code></td>
+<td>释放打开的文件fd</td>
+</tr>
+<tr>
+<td><code>int dup(int fd)</code></td>
+<td>返回一个新的文件描述符，指向与fd 相同的文件</td>
+</tr>
+<tr>
+<td><code>int pipe(int p[])</code></td>
+<td>创建一个管道，把read&#x2F;write文件描述符放在p[0]和p[1]中</td>
+</tr>
+<tr>
+<td><code>int chdir(char *dir)</code></td>
+<td>改变当前的工作目录</td>
+</tr>
+<tr>
+<td><code>int mkdir(char *dir)</code></td>
+<td>创建一个新目录</td>
+</tr>
+<tr>
+<td><code>int mknod(char *file, int, int)</code></td>
+<td>创建一个设备文件</td>
+</tr>
+<tr>
+<td><code>int fstat(int fd, struct stat *st)</code></td>
+<td>将打开文件fd的信息放入*st</td>
+</tr>
+<tr>
+<td><code>int stat(char *file, struct stat *st)</code></td>
+<td>将指定名称的文件信息放入*st</td>
+</tr>
+<tr>
+<td><code>int link(char *file1, char *file2)</code></td>
+<td>为文件file1创建另一个名称(file2)</td>
+</tr>
+<tr>
+<td><code>int unlink(char *file)</code></td>
+<td>删除一个文件</td>
+</tr>
+</tbody></table>
+<p>​		表1.2：xv6系统调用（除非另外声明，这些系统调用返回0表示无误，返回-1表示出错）</p>
+<p>另外，shell是一个用于读入用户命令并执行的程序，它是用户程序而非内核的一部分。xv6 shell是Unix Bourne shell的一个简单实现。它的实现可以在(<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//user/sh.c#L1">user&#x2F;sh.c:1</a>)中找到。</p>
+<h2 id="1-进程与内存-Processes-and-memory"><a href="#1-进程与内存-Processes-and-memory" class="headerlink" title="1. 进程与内存(Processes and memory)"></a>1. 进程与内存(Processes and memory)</h2><h2 id="2-IO与文件描述符-I-O-and-File-descriptors"><a href="#2-IO与文件描述符-I-O-and-File-descriptors" class="headerlink" title="2. IO与文件描述符(I&#x2F;O and File descriptors)"></a>2. IO与文件描述符(I&#x2F;O and File descriptors)</h2><h2 id="3-管道-Pipes"><a href="#3-管道-Pipes" class="headerlink" title="3. 管道(Pipes)"></a>3. 管道(Pipes)</h2><h2 id="4-文件系统-File-system"><a href="#4-文件系统-File-system" class="headerlink" title="4. 文件系统(File system)"></a>4. 文件系统(File system)</h2>]]></content>
+      <categories>
+        <category>OS</category>
+        <category>note</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+        <tag>6.S081</tag>
+        <tag>xv6</tag>
+      </tags>
   </entry>
 </search>
