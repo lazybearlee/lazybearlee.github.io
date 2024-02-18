@@ -109,7 +109,7 @@
 <p>在xv6中，一个进程可以使用<code>fork</code>来创建一个新的进程。正如Lec1中讲到的，<code>fork</code>所创建的新进程有着和原进程相同的内存内容，而<code>fork</code>也会在两个进程中返回。不过<code>fork</code>在原进程中返回新进程的PID，在新进程中返回0。原进程和新进程也被叫做父进程和子进程。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> pid = fork();</span><br><span class="line"><span class="keyword">if</span>(pid &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;parent: child=%d\n&quot;</span>, pid);</span><br><span class="line">    pid = wait((<span class="type">int</span> *) <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child %d is done\n&quot;</span>, pid);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(pid == <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child: exiting\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;fork error\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在上面这个例子中，代码首先执行int pid &#x3D; fork();，这是一个创建子进程的系统调用。fork()函数会创建一个新的进程，该进程是原始进程(称为父进程)的副本。在父进程中，fork()函数返回子进程的进程ID(PID)，而在子进程中，它返回0。接下来，代码检查pid的值，以确定当前是父进程还是子进程。<strong>如果pid &gt; 0</strong>，则表示当前为父进程。父进程会打印一条消息，指示其子进程的PID，并使用wait()函数等待子进程完成。wait()函数使父进程暂停执行，直到子进程终止。一旦子进程终止，父进程会打印一条消息，指示子进程的PID。<strong>如果pid &#x3D;&#x3D; 0</strong>，则表示当前为子进程。子进程会打印一条消息，表示它正在退出，然后调用exit(0)函数正常终止。<strong>如果pid &lt; 0</strong>，则表示fork()调用失败，没有成功创建子进程。这时，代码会打印一条错误消息。</p>
+<p>在上面这个例子中，代码首先执行<code>int pid = fork();</code>，这是一个创建子进程的系统调用。<code>fork()</code>函数会创建一个新的进程，该进程是原始进程(称为父进程)的副本。在父进程中，<code>fork()</code>函数返回子进程的进程ID(PID)，而在子进程中，它返回0。接下来，代码检查pid的值，以确定当前是父进程还是子进程。<strong>如果pid &gt; 0</strong>，则表示当前为父进程。父进程会打印一条消息，指示其子进程的PID，并使用<code>wait()</code>函数等待子进程完成。<code>wait()</code>函数使父进程暂停执行，直到子进程终止。一旦子进程终止，父进程会打印一条消息，指示子进程的PID。<strong>如果pid &#x3D;&#x3D; 0</strong>，则表示当前为子进程。子进程会打印一条消息，表示它正在退出，然后调用<code>exit(0)</code>函数正常终止。<strong>如果pid &lt; 0</strong>，则表示<code>fork()</code>调用失败，没有成功创建子进程。这时，代码会打印一条错误消息。</p>
 <p>这个例子中有几个需要注意的点：</p>
 <ol>
 <li><code>exit</code>: <code>exit</code>会造成调用进程停止执行并释放内存和打开的文件等资源。它需要一个整数状态参数，一般而言0表示成果，1表示失败。</li>
@@ -122,13 +122,13 @@
 <h2 id="2-IO与文件描述符-I-O-and-File-descriptors"><a href="#2-IO与文件描述符-I-O-and-File-descriptors" class="headerlink" title="2. IO与文件描述符(I&#x2F;O and File descriptors)"></a>2. IO与文件描述符(I&#x2F;O and File descriptors)</h2><p>文件描述符指的是一个表示由内核管理的用于进程读写对象的整数。而这个文件描述符可以通过打开文件、目录、设备、管道或者复制一个现有的描述符来获得。文件描述符接口使得我们能够抽离文件、管道和设备之间的差别，让它们都变为字节流的形式。而这种输入输出我们也叫做I&#x2F;O。</p>
 <p>在内部，xv6内核使用文件描述符作为每个进程表的索引，因此每个进程都有一个从零开始的文件描述符的私有空间。按照惯例，进程读取文件描述符0(标准输入)，将输出写入文件描述符1(标准输出)，并将错误消息写入文件描述符2(标准错误)。shell利用协议来实现I&#x2F;O重定向和管道。shell确保始终打开三个文件描述符(<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//user/sh.c#L151">user&#x2F;sh.c:151</a>)，默认情况下，这三个描述符是控制台的文件描述符。</p>
 <p><code>read(fd, buf, n)</code>调用从文件描述符<code>fd</code>中读取最多n字节数据并存入<code>buf</code>中，然后返回读取的字节数。每个文件描述符都有一个与其相关的偏移量。<code>read</code>从当前文件偏移量读取数据，然后将该偏移量增加读取的字节数：后续读取将返回第一次读取返回的字节之后的字节。当没有更多的字节可读取时，<code>read</code>返回零表示文件的结束。</p>
-<p>&#96;&#96;<br><code>write(fd, buf, n)</code>调用将<code>buf</code>中的n个字节写入文件描述符<code>fd</code>，并返回写入的字节数。只有当发生错误时，写入的字节数才少于n个。与读取一样，<code>write</code>以当前文件偏移量写入数据，然后将该偏移量后移写入的字节数：每次写入都会从上一次写入的位置开始。</p>
+<p><code>write(fd, buf, n)</code>调用将<code>buf</code>中的n个字节写入文件描述符<code>fd</code>，并返回写入的字节数。只有当发生错误时，写入的字节数才少于n个。与读取一样，<code>write</code>以当前文件偏移量写入数据，然后将该偏移量后移写入的字节数：每次写入都会从上一次写入的位置开始。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> buf[<span class="number">512</span>];</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    n = read(<span class="number">0</span>, buf, <span class="keyword">sizeof</span> buf);</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">if</span>(n &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;read error\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(write(<span class="number">1</span>, buf, n) != n)&#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;write error\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> *argv[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">argv[<span class="number">0</span>] = <span class="string">&quot;cat&quot;</span>;</span><br><span class="line">argv[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>(fork() == <span class="number">0</span>) &#123;</span><br><span class="line">    close(<span class="number">0</span>);</span><br><span class="line">    open(<span class="string">&quot;input.txt&quot;</span>, O_RDONLY);</span><br><span class="line">    exec(<span class="string">&quot;cat&quot;</span>, argv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>close</code>调用释放了一个文件描述符，使其可以自由地供未来的<code>open</code>、<code>pipe</code>或<code>dup</code>系统调用重用(见下文)。新分配的文件描述符总是当前进程中编号最低的未使用描述符。</p>
+<p><code>close</code>调用释放了一个文件描述符，使其可以自由地供未来的<code>open</code>、<code>pipe</code>或<code>dup</code>重用。新分配的文件描述符总是当前进程中编号最低的未使用描述符。</p>
 <p>文件描述符和<code>fork</code>相互作用，使I&#x2F;O重定向易于实现。<code>fork</code>将父级的文件描述符表及其内存一起复制，以便子级从与父级完全相同的打开文件开始。<code>exec</code>替换调用进程的内存，但保留其文件表。这种行为允许shell通过<code>fork</code>、重新打开子级中选定的文件描述符，然后调用<code>exec</code>来运行新程序，从而实现I&#x2F;O重定向。</p>
-<p><code>open</code>的第二个参数由一组以位表示的标记组成，这些标记控制打开的操作。可能的值在文件控制(fcntl)头文件<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//kernel/fcntl.h#L1-L5">(kernel&#x2F;fcntl.h:1-5)</a>中定义：<strong>O_RDONLY、O_WRONLY、O_2 RDWR、O_CREATE和O_TRUNC</strong>，它们指示打开以打开文件进行读取、写入或同时进行读取和写入，如果文件不存在，则创建文件，并将文件截断为零长度。</p>
+<p><code>open</code>的第二个参数由一组以位表示的标记组成，这些标记控制打开的操作。可能的值在文件控制(fcntl)头文件<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//kernel/fcntl.h#L1-L5">(kernel&#x2F;fcntl.h:1-5)</a>中定义：<strong>O_RDONLY、O_WRONLY、O_2 RDWR、O_CREATE和O_TRUNC</strong>，它们指示打开以打开文件进行读取、写入、同时进行读取和写入、如果文件不存在则创建文件、将文件截断为零长度。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(fork() == <span class="number">0</span>) &#123;</span><br><span class="line">    write(<span class="number">1</span>, <span class="string">&quot;hello &quot;</span>, <span class="number">6</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">    write(<span class="number">1</span>, <span class="string">&quot;world\n&quot;</span>, <span class="number">6</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>需要注意的是，子进程与父进程共享偏移量——它们指向的是同一个对象。在上面这个片段中，描述符1对应的文件最终会包含数据<code>hello world</code>。</p>
@@ -137,7 +137,40 @@
 <p><code>dup</code>调用复制一个现有的文件描述符，返回一个引用相同底层I&#x2F;O对象的新描述符。两个文件描述符共享一个偏移量，就像<code>fork</code>复制的文件描述符一样。</p>
 <p>而如果两个文件描述符是通过一系列<code>fork</code>和<code>dup</code>调用从同一原始文件描述符派生而来，则它们共享一个偏移量。否则，文件描述符不会共享偏移量，即使它们是由对同一文件的打开调用引起的。<code>dup</code>允许shell实现如下命令：<code>ls existing file non-existing file&gt;tmp1 2&gt;&amp;1</code>。<code>2&gt;&amp;1</code>命令告诉shell为命令提供一个文件描述符2，该描述符与描述符1重复。现有文件的名称和不存在文件的错误消息都将显示在文件tmp1中。xv6 shell不支持错误文件描述符的I&#x2F;O重定向。</p>
 <p>文件描述符是一个强大的抽象，因为它们隐藏了它们所连接的内容的细节：写入文件描述符1的进程可能是写入文件、控制台等设备或管道。</p>
-<h2 id="3-管道-Pipes"><a href="#3-管道-Pipes" class="headerlink" title="3. 管道(Pipes)"></a>3. 管道(Pipes)</h2><h2 id="4-文件系统-File-system"><a href="#4-文件系统-File-system" class="headerlink" title="4. 文件系统(File system)"></a>4. 文件系统(File system)</h2>]]></content>
+<h2 id="3-管道-Pipes"><a href="#3-管道-Pipes" class="headerlink" title="3. 管道(Pipes)"></a>3. 管道(Pipes)</h2><p>管道是一种用于进程间通信的通信方式，它是半双工的(单向的)。管道实际上是一个小的内核缓冲区，它以文件描述符对的形式提供给进程，一个用于写操作，一个用于读操作。从管道的一端写的数据可以从管道的另一端读取。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/557052338">一篇介绍管道的文章</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> p[<span class="number">2</span>];</span><br><span class="line"><span class="type">char</span> *argv[<span class="number">2</span>];</span><br><span class="line">argv[<span class="number">0</span>] = <span class="string">&quot;wc&quot;</span>;</span><br><span class="line">argv[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">pipe(p);</span><br><span class="line"><span class="keyword">if</span>(fork() == <span class="number">0</span>) &#123;</span><br><span class="line">    close(<span class="number">0</span>);</span><br><span class="line">    dup(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">1</span>]);</span><br><span class="line">    exec(<span class="string">&quot;/bin/wc&quot;</span>, argv);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    write(p[<span class="number">1</span>], <span class="string">&quot;hello world\n&quot;</span>, <span class="number">12</span>);</span><br><span class="line">    close(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先，代码声明了一个整型数组<code>p[2]</code>，用于存储管道的文件描述符。管道需要两个文件描述符，一个用于读取数据，另一个用于写入数据。然后，代码声明了一个字符指针数组<code>argv[2]</code>，用于存储传递给<code>exec</code>的参数。在本例中，<code>argv[0]</code>被设置为字符串<code>&quot;wc&quot;</code>，<code>argv[1]</code>被设置为<code>0（NULL）</code>。接下来，代码调用<code>pipe(p)</code>函数创建了一个管道。<code>pipe()</code>函数会创建一个新的管道，并将两个文件描述符分别存储在<code>p[0]</code>和<code>p[1]</code>中。<code>p[0]</code>用于从管道中读取数据，<code>p[1]</code>用于向管道中写入数据。然后，代码调用<code>fork()</code>函数创建一个子进程。子进程是父进程的副本，包括文件描述符的复制。在子进程中，通过检查<code>fork()</code>的返回值为0来确定当前是子进程。子进程首先关闭标准输入文件描述符0（即关闭标准输入），然后使用<code>dup(p[0])</code>将管道的读取端复制到文件描述符0（即将管道的读取端作为子进程的标准输入），接着关闭不再需要的文件描述符<code>p[0]</code>和<code>p[1]</code>，最后调用<code>exec(&quot;/bin/wc&quot;, argv)</code>来执行wc命令，将管道的输入作为wc命令的输入。在父进程中，通过检查<code>fork()</code>的返回值是否为0来确定当前是父进程。父进程使用<code>write(p[1], &quot;hello world\n&quot;, 12)</code>将字符串<code>&quot;hello world\n&quot;</code>写入管道的写入端，然后关闭不再需要的文件描述符<code>p[0]</code>和<code>p[1]</code>。</p>
+<p>这段代码的目的是创建一个管道，并通过将数据写入管道的写入端，然后从管道的读取端读取数据来实现父子进程之间的通信。子进程通过执行wc命令，将从管道读取的数据作为输入，并返回统计信息。需要注意的是，如果数据没有准备好，那么对管道执行的<code>read</code>会一直等待，直到有数据了或者其他绑定在这个管道写端口的描述符都已经关闭了。在后一种情况中，<code>read</code> 会返回 0，就像是一份文件读到了最后。</p>
+<p>xv6 shell 对管道的实现（比如 <code>fork sh.c | wc -l</code>）和上面的描述是类似的。子进程创建一个管道连接管道的左右两端。然后它为管道左右两端都调用 <code>runcmd</code>，然后通过两次 wait 等待左右两端结束。管道右端可能也是一个带有管道的指令，如 <code>a | b | c</code>, 它 <code>fork</code> 两个新的子进程（一个 <code>b</code> 一个 <code>c</code>），因此，shell 可能创建出一颗进程树。树的叶子节点是命令，中间节点是进程，它们会等待左子和右子执行结束。理论上，你可以让中间节点都运行在管道的左端，但做的如此精确会使得实现变得复杂。</p>
+<p><code>pipe</code> 可能看上去和临时文件没有什么两样：命令</p>
+<p><code>echo hello world | wc</code></p>
+<p>可以用无管道的方式实现：</p>
+<p><code>echo hello world &gt; /tmp/xyz; wc &lt; /tmp/xyz</code></p>
+<p>但管道和临时文件起码有三个关键的不同点。</p>
+<ol>
+<li>首先，管道会进行自我清扫，如果是 shell 重定向的话，我们必须要在任务完成后删除 &#x2F;tmp&#x2F;xyz。</li>
+<li>第二，管道可以传输任意长度的数据。</li>
+<li>第三，管道允许同步：两个进程可以使用一对管道来进行二者之间的信息传递，每一个读操作都阻塞调用进程，直到另一个进程用 write 完成数据的发送。</li>
+</ol>
+<h2 id="4-文件系统-File-system"><a href="#4-文件系统-File-system" class="headerlink" title="4. 文件系统(File system)"></a>4. 文件系统(File system)</h2><p>xv6 文件系统提供文件和目录，文件就是一个简单的字节数组，而目录包含指向文件和其他目录的引用。xv6 把目录实现为一种特殊的文件。目录是一棵树，它的根节点是一个特殊的目录 <code>root</code>。<code>/a/b/c</code> 指向一个在目录 <code>b</code> 中的文件 <code>c</code>，而 <code>b</code> 本身又是在目录 <code>a</code> <code>中的，a</code> 又是处在 <code>root</code> 目录下的。不从 <code>/</code> 开始的目录表示的是相对调用进程当前目录的目录，调用进程的当前目录可以通过 <code>chdir</code> 这个系统调用进行改变。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line">chdir(<span class="string">&quot;/a&quot;</span>);</span><br><span class="line">chdir(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">open(<span class="string">&quot;c&quot;</span>, O_RDONLY);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line">open(<span class="string">&quot;/a/b/c&quot;</span>, O_RDONLY);</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码片段中的两个例子都打开了同一个文件，不同的是，第一种方式修改了当前目录。</p>
+<p>有很多的系统调用可以创建一个新的文件或者目录：<code>mkdir</code> 创建一个新的目录，<code>open</code> 加上 <code>O_CREATE</code> 标志打开一个新的文件，<code>mknod</code> 创建一个新的设备文件。 <code>mknod</code> 在文件系统中创建一个文件，但是这个文件没有任何内容。相反，这个文件的元信息标志它是一个设备文件，并且记录主设备号和辅设备号（<code>mknod</code> 的两个参数），这两个设备号唯一确定一个内核设备。当一个进程之后打开这个文件的时候，内核将读、写的系统调用转发到内核设备的实现上，而不是传递给文件系统。</p>
+<p><code>fstat</code> 可以获取一个文件描述符指向的文件的信息。它填充一个名为 <code>stat</code> 的结构体，它在 <code>stat.h</code> 中定义为：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> T_DIR  1</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> T_FILE 2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> T_DEV  3</span></span><br><span class="line"><span class="comment">// Directory</span></span><br><span class="line"><span class="comment">// File</span></span><br><span class="line"><span class="comment">// Device</span></span><br><span class="line">     <span class="class"><span class="keyword">struct</span> <span class="title">stat</span> &#123;</span></span><br><span class="line">       <span class="type">short</span> type;  <span class="comment">// Type of file</span></span><br><span class="line">       <span class="type">int</span> dev;     <span class="comment">// File system’s disk device</span></span><br><span class="line">       uint ino;    <span class="comment">// Inode number</span></span><br><span class="line">       <span class="type">short</span> nlink; <span class="comment">// Number of links to file</span></span><br><span class="line">       uint size;   <span class="comment">// Size of file in bytes</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>文件名和这个文件本身是有很大的区别。同一个文件（称为 <strong>inode</strong>）可能有多个名字，称为连接 (<strong>links</strong>)。系统调用 <code>link</code> 创建另一个文件系统的名称，它指向同一个 <code>inode</code>。下面的代码创建了一个既叫做 <code>a</code> 又叫做 <code>b</code> 的新文件。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">open(<span class="string">&quot;a&quot;</span>, O_CREATE|O_WRONGLY);</span><br><span class="line">link(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>unlink</code> 这个系统调用用于从文件系统移除一个文件名。一个文件的 <code>inode</code> 和磁盘空间只有当它的链接数变为 0 的时候才会被清空，也就是没有一个文件再指向它。因此在上面的代码最后加上<code>unlink(&quot;a&quot;)</code>，我们同样可以通过 b 访问到它。另外，</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">fd = open(<span class="string">&quot;/tmp/xyz&quot;</span>, O_CREATE|O_RDWR);</span><br><span class="line">unlink(<span class="string">&quot;/tmp/xyz&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>是创建一个临时 <code>inode</code> 的最佳方式，这个 <code>inode</code> 会在进程关闭 <code>fd</code> 或者退出的时候被清空。</p>
+<p>xv6 关于文件系统的操作都被实现为用户程序，诸如 <code>mkdir</code>，<code>ln</code>，<code>rm</code> 等等。这种设计允许任何人都可以通过用户命令拓展 shell 。现在看起来这种设计是很显然的，但是 Unix 时代的其他系统的设计都将这样的命令内置在了 shell 中，而 shell 又是内置在内核中的。</p>
+<p>有一个例外，那就是 <code>cd</code>，它是在 shell 中实现的（8016）。<code>cd</code> 必须改变 shell 自身的当前工作目录。如果 <code>cd</code> 作为一个普通命令执行，那么 shell 就会 <code>fork</code> 一个子进程，而子进程会运行 <code>cd</code>，<code>cd</code> 只会改变子进程的当前工作目录。父进程的工作目录保持原样。</p>
+]]></content>
       <categories>
         <category>OS</category>
         <category>note</category>
@@ -146,20 +179,6 @@
         <tag>OS</tag>
         <tag>6.S081</tag>
         <tag>xv6</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>os_lab_1</title>
-    <url>/2024/02/15/os-lab-1/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>OS</category>
-        <category>Lab</category>
-      </categories>
-      <tags>
-        <tag>OS</tag>
-        <tag>CS</tag>
-        <tag>Lab</tag>
       </tags>
   </entry>
   <entry>
@@ -239,6 +258,8 @@
 <td><a href="https://github.com/snowdream/awesome-android">awesome-android</a></td>
 </tr>
 </tbody></table>
+<p>除此之外也有一些近期热门的项目有必要供我们了解。<br><a href="https://github.com/OpenGithubs/weekly">Github开源项目精选周刊</a></p>
+<p>除了这些，还有一些关键词如“项目”，“每周”等，就可以让我们找到一些大陆工程师们实现或推荐的项目或资讯。</p>
 <h1 id="Example1"><a href="#Example1" class="headerlink" title="Example1"></a>Example1</h1><p>而以下则是一个寻找开源项目的例子的记录。在这个例子中，我需要完成基于数据湖、向量数据库、索引技术和领域大模型的一个项目。所以，我首先希望去查找一些较为成熟或是具有参考价值的项目，从而形成我对于项目实际开发的技术路线的思考。</p>
 ]]></content>
       <categories>
@@ -247,6 +268,95 @@
       <tags>
         <tag>Github</tag>
         <tag>tip</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>os_lab_1</title>
+    <url>/2024/02/15/os-lab-1/</url>
+    <content><![CDATA[<h1 id="Lab-Xv6-and-Unix-utilities"><a href="#Lab-Xv6-and-Unix-utilities" class="headerlink" title="Lab: Xv6 and Unix utilities"></a>Lab: Xv6 and Unix utilities</h1><p>本文章主要记录操作系统课程6.S081的实验1过程，该实验主要帮助熟悉xv6以及系统调用。</p>
+<span id="more"></span>
+
+<h2 id="启动xv6"><a href="#启动xv6" class="headerlink" title="启动xv6"></a>启动xv6</h2><blockquote>
+<p>easy</p>
+</blockquote>
+<p>本实验一开始配置环境按照2020版的说明在ubantu虚拟机上进行，但是由于2024年xv6的toolchain和qemu版本的变更问题，编译后不能正常执行和启动（包括配置文件属性更改、虚拟磁盘无法正常加载等等），同时编译该环境的资源需求也非常庞大（toolchain有将近10G的文件）。最后还是选择放弃了该方案，而是选择了采用WSL+VScode+ubantu20.04LTS进行实验，后者的资源需求明显降低，并且采用vscode进行实验在操作上会更为简便。</p>
+<p>使用vscode在终端输入以下命令安装工具包：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git build-essential gdb-multiarch qemu-system-misc gcc-riscv64-linux-gnu binutils-riscv64-linux-gnu</span><br></pre></td></tr></table></figure>
+
+<p>在实验开始之前，需要获取xv6的源文件：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-riscv.git</span><br></pre></td></tr></table></figure>
+
+<p>也可以获取如下的源文件（我采用的是xv6-labs-2020的版本）：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://g.csail.mit.edu/xv6-labs-2020</span><br></pre></td></tr></table></figure>
+
+<p>然后进入对应目录切换到对应分支：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> xv6-labs-2020</span><br><span class="line">git checkout util</span><br></pre></td></tr></table></figure>
+
+<p>然后我们可以通过以下命令构建并运行xv6：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/xv6-labs-2020$ make qemu</span><br><span class="line">qemu-system-riscv64 -machine virt -bios none -kernel kernel/kernel -m 128M -smp 3 -nographic -drive file=fs.img,<span class="keyword">if</span>=none,format=raw,<span class="built_in">id</span>=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0</span><br><span class="line"></span><br><span class="line">xv6 kernel is booting</span><br><span class="line"></span><br><span class="line">hart 2 starting</span><br><span class="line">hart 1 starting</span><br><span class="line">init: starting sh</span><br><span class="line">$ </span><br></pre></td></tr></table></figure>
+
+<p>而如果我们在提示符$后输入<code>ls</code>，我们可以看到以下类似的内容：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">ls</span></span><br><span class="line">.              1 1 1024</span><br><span class="line">..             1 1 1024</span><br><span class="line">README         2 2 2059</span><br><span class="line">xargstest.sh   2 3 93</span><br><span class="line"><span class="built_in">cat</span>            2 4 23896</span><br><span class="line"><span class="built_in">echo</span>           2 5 22728</span><br><span class="line">forktest       2 6 13080</span><br><span class="line">grep           2 7 27248</span><br><span class="line">init           2 8 23824</span><br><span class="line"><span class="built_in">kill</span>           2 9 22696</span><br><span class="line"><span class="built_in">ln</span>             2 10 22648</span><br><span class="line"><span class="built_in">ls</span>             2 11 26128</span><br><span class="line"><span class="built_in">mkdir</span>          2 12 22792</span><br><span class="line"><span class="built_in">rm</span>             2 13 22784</span><br><span class="line">sh             2 14 41664</span><br><span class="line">stressfs       2 15 23800</span><br><span class="line">usertests      2 16 147440</span><br><span class="line">grind          2 17 37912</span><br><span class="line"><span class="built_in">wc</span>             2 18 25032</span><br><span class="line">zombie         2 19 22192</span><br><span class="line">console        3 20 0</span><br><span class="line">$ </span><br></pre></td></tr></table></figure>
+
+<p>xv6中没有<code>ps</code>命令，不过我们可以按下<code>Ctrl</code>&amp;<code>p</code>，然后内核就会打印出每个进程的信息。而如果需要退出，我们可以按下<code>Ctrl</code>&amp;<code>p</code>+<code>x</code>。</p>
+<p>我们可以运行<code>make grade</code>来用评分程序测试我们的解决方案。</p>
+<h2 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h2><blockquote>
+<p>easy</p>
+</blockquote>
+<p>实验要求：</p>
+<blockquote>
+<p>Implement the UNIX program sleep for xv6; your sleep should pause for a user-specified number of ticks. A tick is a notion of time defined by the xv6 kernel, namely the time between two interrupts from the timer chip. Your solution should be in the file <code>user/sleep.c</code>.</p>
+</blockquote>
+<p>这个功能的实现即调用系统函数<code>sleep</code>来实现用户函数<code>sleep</code>，主要就是供我们熟悉怎么去在这个xv6环境下写代码。不过，我们并不能去调用标准的C库，我们所有能够调用的系统函数都在<code>user/user.h</code>中。而实现这个功能并不难，只需要调用系统函数即可，需要注意的是补全我们的提示信息。</p>
+<p>以下为<code>sleep.c</code>的实现。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#include &quot;kernel/types.h&quot;</span></span><br><span class="line"><span class="comment">#include &quot;user/user.h&quot;</span></span><br><span class="line"></span><br><span class="line">int</span><br><span class="line">main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  char *arg_ticks;</span><br><span class="line">  int ticks;</span><br><span class="line">  int ret;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(argc != 2)&#123;</span><br><span class="line">    fprintf(2, <span class="string">&quot;usage: sleep [ticks num]\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(1);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  arg_ticks = argv[1];</span><br><span class="line">  ticks = atoi(arg_ticks);</span><br><span class="line"></span><br><span class="line">  ret = <span class="built_in">sleep</span>(ticks);</span><br><span class="line">  <span class="built_in">exit</span>(ret);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下为测试结果(需要注意的是，我们首先要把<code>sleep</code>添加到Makefile的<code>UPROGS</code>中)：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">lee@lazybear:~/xv6-labs-2020$ ./grade-lab-util <span class="built_in">sleep</span></span><br><span class="line">make: <span class="string">&#x27;kernel/kernel&#x27;</span> is up to <span class="built_in">date</span>.</span><br><span class="line">== Test <span class="built_in">sleep</span>, no arguments == <span class="built_in">sleep</span>, no arguments: OK (0.6s) </span><br><span class="line">    (Old xv6.out.sleep_no_args failure <span class="built_in">log</span> removed)</span><br><span class="line">== Test <span class="built_in">sleep</span>, returns == <span class="built_in">sleep</span>, returns: OK (1.0s) </span><br><span class="line">== Test <span class="built_in">sleep</span>, makes syscall == <span class="built_in">sleep</span>, makes syscall: OK (1.0s) </span><br><span class="line">    (Old xv6.out.sleep failure <span class="built_in">log</span> removed)</span><br></pre></td></tr></table></figure>
+
+<h2 id="pingpong"><a href="#pingpong" class="headerlink" title="pingpong"></a>pingpong</h2><blockquote>
+<p>easy</p>
+</blockquote>
+<p>实验要求：</p>
+<blockquote>
+<p>Write a program that uses UNIX system calls to ‘’ping-pong’’ a byte between two processes over a pair of pipes, one for each direction. The parent should send a byte to the child; the child should print “<pid>: received ping”, where <pid> is its process ID, write the byte on the pipe to the parent, and exit; the parent should read the byte from the child, print “<pid>: received pong”, and exit. Your solution should be in the file <code>user/pingpong.c</code>.</p>
+</blockquote>
+<p>这一部分实验实现主要参考xv6-book的第一章管道部分。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#include &quot;kernel/types.h&quot;</span></span><br><span class="line"><span class="comment">#include &quot;user/user.h&quot;</span></span><br><span class="line"></span><br><span class="line">int</span><br><span class="line">main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  // Create file descriptors <span class="keyword">for</span> storing the pipe, p[0] <span class="keyword">for</span> reading and p[1] <span class="keyword">for</span> writing.</span><br><span class="line">  int p1[2]; // parent2child</span><br><span class="line">  int p2[2]; // child2parent</span><br><span class="line">  char buf[] = &#123;<span class="string">&#x27;0&#x27;</span>&#125;;</span><br><span class="line">  int pid;</span><br><span class="line">  // Create pipes</span><br><span class="line">  pipe(p1);</span><br><span class="line">  pipe(p2);</span><br><span class="line"></span><br><span class="line">  // fork and ping-pong between parent and child.</span><br><span class="line">  <span class="keyword">if</span>(fork() == 0) &#123;</span><br><span class="line">    // child</span><br><span class="line">    pid = getpid();</span><br><span class="line">    close(p1[1]);</span><br><span class="line">    close(p2[0]);</span><br><span class="line">    <span class="built_in">read</span>(p1[0], buf, 1); // Read 1 byte of data from p1 into buf.</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d: received ping\n&quot;</span>, pid);</span><br><span class="line">    write(p2[1], buf, 1);</span><br><span class="line">    <span class="built_in">exit</span>(0);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    // parent</span><br><span class="line">    pid = getpid();</span><br><span class="line">    close(p2[1]);</span><br><span class="line">    close(p1[0]);</span><br><span class="line">    write(p1[1], buf, 1); // Write 1 byte of data from buf into p1 and child will <span class="built_in">read</span>.</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d: received pong\n&quot;</span>, pid);</span><br><span class="line">    <span class="built_in">read</span>(p2[0], buf, 1);</span><br><span class="line">    <span class="built_in">exit</span>(0);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将pingpong加入Makefile后测试结果如下：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">lee@lazybear:~/xv6-labs-2020$ ./grade-lab-util pingpong</span><br><span class="line">make: <span class="string">&#x27;kernel/kernel&#x27;</span> is up to <span class="built_in">date</span>.</span><br><span class="line">== Test pingpong == pingpong: OK (0.9s) </span><br></pre></td></tr></table></figure>
+
+<h2 id="primes"><a href="#primes" class="headerlink" title="primes"></a>primes</h2><blockquote>
+<p><em><strong>hard</strong></em></p>
+</blockquote>
+<p>实验要求：</p>
+<blockquote>
+<p>Write a concurrent version of prime sieve using pipes. This idea is due to Doug McIlroy, inventor of Unix pipes. The picture halfway down <a href="http://swtch.com/~rsc/thread/">this page</a> and the surrounding text explain how to do it. Your solution should be in the file <code>user/primes.c</code>.</p>
+</blockquote>
+<blockquote>
+<p>您的目标是使用<code>pipe</code>和<code>fork</code>来设置管道。第一个进程将数字2到35输入到管道中。对于每个素数，您将安排创建一个进程，该进程通过一个管道从其左邻居读取，并通过另一个管道向其右邻居写入。由于xv6具有有限数量的文件描述符和进程，因此第一个进程可以在35处停止。</p>
+</blockquote>
+<p>实验中需要注意的点是：</p>
+<ul>
+<li>关闭进程不必要的文件描述符</li>
+<li>一旦第一个进程达到35，它就应该等待，直到整个管道终止，包括所有的子进程、孙进程等等。因此，主素数进程应该只在打印完所有输出之后以及所有其他素数进程退出之后才退出。</li>
+<li>当写侧管道关闭时，<code>read</code>返回0。</li>
+</ul>
+<p>这个实验涉及到了一个质数筛选算法——素数筛法，是一种快速“筛”出2~n之间所有素数的方法。朴素的筛法叫埃氏筛（the Sieve ofEratosthenes，埃拉托色尼筛）。这个算法可以具体去看<a href="https://zhuanlan.zhihu.com/p/100051075">知乎文章——算法学习笔记(17): 素数筛</a>。</p>
+<p>这个算法最朴素的实现代码如下；</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> isnp[MAXN]; <span class="comment">// is not prime: 不是素数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">init</span><span class="params">(<span class="type">int</span> n)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i * i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">if</span> (!isnp[i])</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i * i; j &lt;= n; j += i)</span><br><span class="line">                isnp[j] = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而回到我们需要完成的题目，其实更像是完成一个欧式筛，我们通过创建进程维护了一个质数表，每一个进程对应一个已经经过检验的质数，它首先会打印这个质数，然后会通过管道不断接受来自左手边进程的数字，如果数字为自己质数的倍数，就筛掉它，否则就fork创建一个新进程，然后把这个数字（即质数）传给新进程。需要注意的是，每个进程都需要等待它的子进程结束才可以退出。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>OS</category>
+        <category>Lab</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+        <tag>Lab</tag>
       </tags>
   </entry>
 </search>
