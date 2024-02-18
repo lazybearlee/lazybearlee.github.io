@@ -1,6 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>6.S081-note-lec1</title>
+    <url>/2024/02/15/6.S081-note-lec1/</url>
+    <content><![CDATA[<p>本篇文章为对xv6-book-rev2的第一章的阅读笔记(主要内容为rev2的翻译理解)以及针对6.S081-2020-Lec1的笔记。</p>
+<span id="more"></span>
+
+<h1 id="操作系统接口"><a href="#操作系统接口" class="headerlink" title="操作系统接口"></a>操作系统接口</h1><p>操作系统的工作包括将计算机资源分享给多个程序，并提供比硬件本身支持更有用的服务。它管理和抽象底层的硬件，使应用程序无需关心使用的是哪种类型的磁盘硬件。然后，操作系统将硬件资源分享给多个程序，使它们能够同时运行或表现出同时运行的状态。最后，操作系统提供受限的方式让程序进行交互，以便它们能够共享数据或共同工作。</p>
+<p>操作系统通过接口向用户程序提供服务。设计一个好的接口是困难的，一方面，我们希望接口简单且窄，因为这样更容易使得我们的实现是正确的；另一方面，我们可能会倾向于为应用程序提供许多复杂的功能。而解决这种紧张关系的诀窍就在于设计一些依赖于少量机制的接口，而这些机制可以组合在一起提供很多的通用性。</p>
+<p><img src="/images/fig1.1.png" alt="fig1.1"></p>
+<p>xv6采用了传统的内核(kernel)形式——为程序运行提供服务的一种特殊程序。而每个运行中的程序——即进程，它有包含了指令、数据和栈的一片内存。指令实现了程序的计算过程，而数据就是程序执行过程中的那些变量。对于栈来说，它实际上是用来将程序的存储过程调用组织起来。一般而言，一个计算机有多个进程而只有一个内核。</p>
+<p>当进程需要调用内核服务时，它会调用系统调用，即操作系统接口中的一个调用。系统调用进入内核；内核执行服务并返回。因此，进程在用户空间和内核空间中交替执行。而对于用户程序而言，它们仅能看到内核所提供的系统调用接口，而无法看到这些接口的实现细节。如下为xv6所实现的系统调用：</p>
+<table>
+<thead>
+<tr>
+<th><strong>系统调用</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int fork()</code></td>
+<td>创建一个进程，返回子进程的PID</td>
+</tr>
+<tr>
+<td><code>int exit(int status)</code></td>
+<td>终止当前进程，并将状态报告给wait()函数。无返回</td>
+</tr>
+<tr>
+<td><code>int wait(int *status)</code></td>
+<td>等待一个子进程退出; 将退出状态存入*status; 返回子进程PID。</td>
+</tr>
+<tr>
+<td><code>int kill(int pid)</code></td>
+<td>终止对应PID的进程，返回0，或返回-1表示错误</td>
+</tr>
+<tr>
+<td><code>int getpid()</code></td>
+<td>返回当前进程的PID</td>
+</tr>
+<tr>
+<td><code>int sleep(int n)</code></td>
+<td>暂停n个时钟节拍</td>
+</tr>
+<tr>
+<td><code>int exec(char *file, char *argv[])</code></td>
+<td>加载一个文件并使用参数执行它; 只有在出错时才返回</td>
+</tr>
+<tr>
+<td><code>char *sbrk(int n)</code></td>
+<td>按n 字节增长进程的内存。返回新内存的开始</td>
+</tr>
+<tr>
+<td><code>int open(char *file, int flags)</code></td>
+<td>打开一个文件；flags表示read&#x2F;write；返回一个fd(文件描述符)</td>
+</tr>
+<tr>
+<td><code>int write(int fd, char *buf, int n)</code></td>
+<td>从buf 写n 个字节到文件描述符fd; 返回n</td>
+</tr>
+<tr>
+<td><code>int read(int fd, char *buf, int n)</code></td>
+<td>将n 个字节读入buf；返回读取的字节数；如果文件结束，返回0</td>
+</tr>
+<tr>
+<td><code>int close(int fd)</code></td>
+<td>释放打开的文件fd</td>
+</tr>
+<tr>
+<td><code>int dup(int fd)</code></td>
+<td>返回一个新的文件描述符，指向与fd 相同的文件</td>
+</tr>
+<tr>
+<td><code>int pipe(int p[])</code></td>
+<td>创建一个管道，把read&#x2F;write文件描述符放在p[0]和p[1]中</td>
+</tr>
+<tr>
+<td><code>int chdir(char *dir)</code></td>
+<td>改变当前的工作目录</td>
+</tr>
+<tr>
+<td><code>int mkdir(char *dir)</code></td>
+<td>创建一个新目录</td>
+</tr>
+<tr>
+<td><code>int mknod(char *file, int, int)</code></td>
+<td>创建一个设备文件</td>
+</tr>
+<tr>
+<td><code>int fstat(int fd, struct stat *st)</code></td>
+<td>将打开文件fd的信息放入*st</td>
+</tr>
+<tr>
+<td><code>int stat(char *file, struct stat *st)</code></td>
+<td>将指定名称的文件信息放入*st</td>
+</tr>
+<tr>
+<td><code>int link(char *file1, char *file2)</code></td>
+<td>为文件file1创建另一个名称(file2)</td>
+</tr>
+<tr>
+<td><code>int unlink(char *file)</code></td>
+<td>删除一个文件</td>
+</tr>
+</tbody></table>
+<p>​		表1.2：xv6系统调用(除非另外声明，这些系统调用返回0表示无误，返回-1表示出错)</p>
+<p>另外，shell是一个用于读入用户命令并执行的程序，它是用户程序而非内核的一部分。xv6 shell是Unix Bourne shell的一个简单实现。它的实现可以在(<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//user/sh.c#L1">user&#x2F;sh.c:1</a>)中找到。</p>
+<h2 id="1-进程与内存-Processes-and-memory"><a href="#1-进程与内存-Processes-and-memory" class="headerlink" title="1. 进程与内存(Processes and memory)"></a>1. 进程与内存(Processes and memory)</h2><p>一个xv6的进程由用户空间内存(指令、数据和栈)以及每个进程对内核私有的状态组成。Xv6在时间上共享进程：它在等待执行的一组进程之间透明地切换可用的CPU。当进程未执行时，xv6会保存其CPU寄存器，并在下次运行进程时恢复这些寄存器。内核将进程标识符(<strong>PID</strong>)与每个进程相关联。</p>
+<p>在xv6中，一个进程可以使用<code>fork</code>来创建一个新的进程。正如Lec1中讲到的，<code>fork</code>所创建的新进程有着和原进程相同的内存内容，而<code>fork</code>也会在两个进程中返回。不过<code>fork</code>在原进程中返回新进程的PID，在新进程中返回0。原进程和新进程也被叫做父进程和子进程。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> pid = fork();</span><br><span class="line"><span class="keyword">if</span>(pid &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;parent: child=%d\n&quot;</span>, pid);</span><br><span class="line">    pid = wait((<span class="type">int</span> *) <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child %d is done\n&quot;</span>, pid);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(pid == <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child: exiting\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;fork error\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面这个例子中，代码首先执行int pid &#x3D; fork();，这是一个创建子进程的系统调用。fork()函数会创建一个新的进程，该进程是原始进程(称为父进程)的副本。在父进程中，fork()函数返回子进程的进程ID(PID)，而在子进程中，它返回0。接下来，代码检查pid的值，以确定当前是父进程还是子进程。<strong>如果pid &gt; 0</strong>，则表示当前为父进程。父进程会打印一条消息，指示其子进程的PID，并使用wait()函数等待子进程完成。wait()函数使父进程暂停执行，直到子进程终止。一旦子进程终止，父进程会打印一条消息，指示子进程的PID。<strong>如果pid &#x3D;&#x3D; 0</strong>，则表示当前为子进程。子进程会打印一条消息，表示它正在退出，然后调用exit(0)函数正常终止。<strong>如果pid &lt; 0</strong>，则表示fork()调用失败，没有成功创建子进程。这时，代码会打印一条错误消息。</p>
+<p>这个例子中有几个需要注意的点：</p>
+<ol>
+<li><code>exit</code>: <code>exit</code>会造成调用进程停止执行并释放内存和打开的文件等资源。它需要一个整数状态参数，一般而言0表示成果，1表示失败。</li>
+<li><code>wait</code>: <code>wait</code>的返回值是一个执行完毕或被杀死的当前进程的子进程的PID，并且会通过传入的参数地址返回子进程的执行状态。不过如果<code>wait</code>没有子进程，那么会当即返回-1。有一个小技巧是，如果不关注子进程执行状态，那么我们可以传入0地址。</li>
+<li>尽管最初两个进程具有相同的内存内容，但是实际上它们使用不同的内存和寄存器来执行程序，这也意味着更改一个进程的变量并不会影响到另一个进程的变量。</li>
+</ol>
+<p>除了上面这个例子所提到的两个系统调用，我们还需要关注到<code>exec</code>——它实际上会用从文件系统中的文件加载的内存镜像替换掉当前调用进程的内存，而这个文件需要具有特定的格式。<code>exec</code>接受两个参数：包含可执行文件的文件名和字符串参数数组。而当<code>exec</code>执行成功时，它并不会返回调用程序，相反，它会从文件加载的指令从ELF头中声明的入口点开始执行。</p>
+<p>shell利用了它在IO重定向中实现的隔离特性，为了避免创建重复进程而立即替换掉的浪费，内核通过使用虚拟内存技术(如写时复制)来优化<code>fork</code>的实现。而这也让<code>fork</code>和<code>exec</code>并没有合并在一个调用中。</p>
+<p>Xv6隐式分配大多数用户空间内存：<code>fork</code>分配父内存的子副本所需的内存，<code>exec</code>分配足够的内存来保存可执行文件。在运行时需要更多内存的进程(可能是<code>malloc</code>)可以调用<code>sbrk(n)</code>来将其数据内存增加n个字节；<code>sbrk</code>返回新内存的位置。</p>
+<h2 id="2-IO与文件描述符-I-O-and-File-descriptors"><a href="#2-IO与文件描述符-I-O-and-File-descriptors" class="headerlink" title="2. IO与文件描述符(I&#x2F;O and File descriptors)"></a>2. IO与文件描述符(I&#x2F;O and File descriptors)</h2><p>文件描述符指的是一个表示由内核管理的用于进程读写对象的整数。而这个文件描述符可以通过打开文件、目录、设备、管道或者复制一个现有的描述符来获得。文件描述符接口使得我们能够抽离文件、管道和设备之间的差别，让它们都变为字节流的形式。而这种输入输出我们也叫做I&#x2F;O。</p>
+<p>在内部，xv6内核使用文件描述符作为每个进程表的索引，因此每个进程都有一个从零开始的文件描述符的私有空间。按照惯例，进程读取文件描述符0(标准输入)，将输出写入文件描述符1(标准输出)，并将错误消息写入文件描述符2(标准错误)。shell利用协议来实现I&#x2F;O重定向和管道。shell确保始终打开三个文件描述符(<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//user/sh.c#L151">user&#x2F;sh.c:151</a>)，默认情况下，这三个描述符是控制台的文件描述符。</p>
+<p><code>read(fd, buf, n)</code>调用从文件描述符<code>fd</code>中读取最多n字节数据并存入<code>buf</code>中，然后返回读取的字节数。每个文件描述符都有一个与其相关的偏移量。<code>read</code>从当前文件偏移量读取数据，然后将该偏移量增加读取的字节数：后续读取将返回第一次读取返回的字节之后的字节。当没有更多的字节可读取时，<code>read</code>返回零表示文件的结束。</p>
+<p>&#96;&#96;<br><code>write(fd, buf, n)</code>调用将<code>buf</code>中的n个字节写入文件描述符<code>fd</code>，并返回写入的字节数。只有当发生错误时，写入的字节数才少于n个。与读取一样，<code>write</code>以当前文件偏移量写入数据，然后将该偏移量后移写入的字节数：每次写入都会从上一次写入的位置开始。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> buf[<span class="number">512</span>];</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    n = read(<span class="number">0</span>, buf, <span class="keyword">sizeof</span> buf);</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">if</span>(n &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;read error\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(write(<span class="number">1</span>, buf, n) != n)&#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;write error\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> *argv[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">argv[<span class="number">0</span>] = <span class="string">&quot;cat&quot;</span>;</span><br><span class="line">argv[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>(fork() == <span class="number">0</span>) &#123;</span><br><span class="line">    close(<span class="number">0</span>);</span><br><span class="line">    open(<span class="string">&quot;input.txt&quot;</span>, O_RDONLY);</span><br><span class="line">    exec(<span class="string">&quot;cat&quot;</span>, argv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>close</code>调用释放了一个文件描述符，使其可以自由地供未来的<code>open</code>、<code>pipe</code>或<code>dup</code>系统调用重用(见下文)。新分配的文件描述符总是当前进程中编号最低的未使用描述符。</p>
+<p>文件描述符和<code>fork</code>相互作用，使I&#x2F;O重定向易于实现。<code>fork</code>将父级的文件描述符表及其内存一起复制，以便子级从与父级完全相同的打开文件开始。<code>exec</code>替换调用进程的内存，但保留其文件表。这种行为允许shell通过<code>fork</code>、重新打开子级中选定的文件描述符，然后调用<code>exec</code>来运行新程序，从而实现I&#x2F;O重定向。</p>
+<p><code>open</code>的第二个参数由一组以位表示的标记组成，这些标记控制打开的操作。可能的值在文件控制(fcntl)头文件<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//kernel/fcntl.h#L1-L5">(kernel&#x2F;fcntl.h:1-5)</a>中定义：<strong>O_RDONLY、O_WRONLY、O_2 RDWR、O_CREATE和O_TRUNC</strong>，它们指示打开以打开文件进行读取、写入或同时进行读取和写入，如果文件不存在，则创建文件，并将文件截断为零长度。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(fork() == <span class="number">0</span>) &#123;</span><br><span class="line">    write(<span class="number">1</span>, <span class="string">&quot;hello &quot;</span>, <span class="number">6</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">    write(<span class="number">1</span>, <span class="string">&quot;world\n&quot;</span>, <span class="number">6</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，子进程与父进程共享偏移量——它们指向的是同一个对象。在上面这个片段中，描述符1对应的文件最终会包含数据<code>hello world</code>。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">fd = dup(<span class="number">1</span>);</span><br><span class="line">write(<span class="number">1</span>, <span class="string">&quot;hello &quot;</span>, <span class="number">6</span>);</span><br><span class="line">write(fd, <span class="string">&quot;world\n&quot;</span>, <span class="number">6</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>dup</code>调用复制一个现有的文件描述符，返回一个引用相同底层I&#x2F;O对象的新描述符。两个文件描述符共享一个偏移量，就像<code>fork</code>复制的文件描述符一样。</p>
+<p>而如果两个文件描述符是通过一系列<code>fork</code>和<code>dup</code>调用从同一原始文件描述符派生而来，则它们共享一个偏移量。否则，文件描述符不会共享偏移量，即使它们是由对同一文件的打开调用引起的。<code>dup</code>允许shell实现如下命令：<code>ls existing file non-existing file&gt;tmp1 2&gt;&amp;1</code>。<code>2&gt;&amp;1</code>命令告诉shell为命令提供一个文件描述符2，该描述符与描述符1重复。现有文件的名称和不存在文件的错误消息都将显示在文件tmp1中。xv6 shell不支持错误文件描述符的I&#x2F;O重定向。</p>
+<p>文件描述符是一个强大的抽象，因为它们隐藏了它们所连接的内容的细节：写入文件描述符1的进程可能是写入文件、控制台等设备或管道。</p>
+<h2 id="3-管道-Pipes"><a href="#3-管道-Pipes" class="headerlink" title="3. 管道(Pipes)"></a>3. 管道(Pipes)</h2><h2 id="4-文件系统-File-system"><a href="#4-文件系统-File-system" class="headerlink" title="4. 文件系统(File system)"></a>4. 文件系统(File system)</h2>]]></content>
+      <categories>
+        <category>OS</category>
+        <category>note</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+        <tag>6.S081</tag>
+        <tag>xv6</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>os_lab_1</title>
+    <url>/2024/02/15/os-lab-1/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>OS</category>
+        <category>Lab</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+        <tag>CS</tag>
+        <tag>Lab</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>怎么找到一个想要的开源项目</title>
     <url>/2024/02/17/howToFindAOpensourceProject/</url>
     <content><![CDATA[<p>本篇文章主要记录本人查找相关开源项目的经验，鉴于本人水平有限，仍在进步中，后续会对本文内容进行进一步的修改与更新。</p>
@@ -85,136 +247,6 @@
       <tags>
         <tag>Github</tag>
         <tag>tip</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>os_lab_1</title>
-    <url>/2024/02/15/os-lab-1/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>OS</category>
-        <category>Lab</category>
-      </categories>
-      <tags>
-        <tag>CS</tag>
-        <tag>OS</tag>
-        <tag>Lab</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>6.S081-note-lec1</title>
-    <url>/2024/02/15/6.S081-note-lec1/</url>
-    <content><![CDATA[<p>本篇文章为对xv6-book-rev2的第一章的阅读笔记（主要内容为rev2的翻译理解）以及针对6.S081-2020-Lec1的笔记。</p>
-<span id="more"></span>
-
-<h1 id="操作系统接口"><a href="#操作系统接口" class="headerlink" title="操作系统接口"></a>操作系统接口</h1><p>操作系统的工作包括将计算机资源分享给多个程序，并提供比硬件本身支持更有用的服务。它管理和抽象底层的硬件，使应用程序无需关心使用的是哪种类型的磁盘硬件。然后，操作系统将硬件资源分享给多个程序，使它们能够同时运行或表现出同时运行的状态。最后，操作系统提供受限的方式让程序进行交互，以便它们能够共享数据或共同工作。</p>
-<p>操作系统通过接口向用户程序提供服务。设计一个好的接口是困难的，一方面，我们希望接口简单且窄，因为这样更容易使得我们的实现是正确的；另一方面，我们可能会倾向于为应用程序提供许多复杂的功能。而解决这种紧张关系的诀窍就在于设计一些依赖于少量机制的接口，而这些机制可以组合在一起提供很多的通用性。</p>
-<p><img src="/images/fig1.1.png" alt="fig1.1"></p>
-<p>xv6采用了传统的内核(kernel)形式——为程序运行提供服务的一种特殊程序。而每个运行中的程序——即进程，它有包含了指令、数据和栈的一片内存。指令实现了程序的计算过程，而数据就是程序执行过程中的那些变量。对于栈来说，它实际上是用来将程序的存储过程调用组织起来。一般而言，一个计算机有多个进程而只有一个内核。</p>
-<p>当进程需要调用内核服务时，它会调用系统调用，即操作系统接口中的一个调用。系统调用进入内核；内核执行服务并返回。因此，进程在用户空间和内核空间中交替执行。而对于用户程序而言，它们仅能看到内核所提供的系统调用接口，而无法看到这些接口的实现细节。如下为xv6所实现的系统调用：</p>
-<table>
-<thead>
-<tr>
-<th><strong>系统调用</strong></th>
-<th><strong>描述</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>int fork()</code></td>
-<td>创建一个进程，返回子进程的PID</td>
-</tr>
-<tr>
-<td><code>int exit(int status)</code></td>
-<td>终止当前进程，并将状态报告给wait()函数。无返回</td>
-</tr>
-<tr>
-<td><code>int wait(int *status)</code></td>
-<td>等待一个子进程退出; 将退出状态存入*status; 返回子进程PID。</td>
-</tr>
-<tr>
-<td><code>int kill(int pid)</code></td>
-<td>终止对应PID的进程，返回0，或返回-1表示错误</td>
-</tr>
-<tr>
-<td><code>int getpid()</code></td>
-<td>返回当前进程的PID</td>
-</tr>
-<tr>
-<td><code>int sleep(int n)</code></td>
-<td>暂停n个时钟节拍</td>
-</tr>
-<tr>
-<td><code>int exec(char *file, char *argv[])</code></td>
-<td>加载一个文件并使用参数执行它; 只有在出错时才返回</td>
-</tr>
-<tr>
-<td><code>char *sbrk(int n)</code></td>
-<td>按n 字节增长进程的内存。返回新内存的开始</td>
-</tr>
-<tr>
-<td><code>int open(char *file, int flags)</code></td>
-<td>打开一个文件；flags表示read&#x2F;write；返回一个fd（文件描述符）</td>
-</tr>
-<tr>
-<td><code>int write(int fd, char *buf, int n)</code></td>
-<td>从buf 写n 个字节到文件描述符fd; 返回n</td>
-</tr>
-<tr>
-<td><code>int read(int fd, char *buf, int n)</code></td>
-<td>将n 个字节读入buf；返回读取的字节数；如果文件结束，返回0</td>
-</tr>
-<tr>
-<td><code>int close(int fd)</code></td>
-<td>释放打开的文件fd</td>
-</tr>
-<tr>
-<td><code>int dup(int fd)</code></td>
-<td>返回一个新的文件描述符，指向与fd 相同的文件</td>
-</tr>
-<tr>
-<td><code>int pipe(int p[])</code></td>
-<td>创建一个管道，把read&#x2F;write文件描述符放在p[0]和p[1]中</td>
-</tr>
-<tr>
-<td><code>int chdir(char *dir)</code></td>
-<td>改变当前的工作目录</td>
-</tr>
-<tr>
-<td><code>int mkdir(char *dir)</code></td>
-<td>创建一个新目录</td>
-</tr>
-<tr>
-<td><code>int mknod(char *file, int, int)</code></td>
-<td>创建一个设备文件</td>
-</tr>
-<tr>
-<td><code>int fstat(int fd, struct stat *st)</code></td>
-<td>将打开文件fd的信息放入*st</td>
-</tr>
-<tr>
-<td><code>int stat(char *file, struct stat *st)</code></td>
-<td>将指定名称的文件信息放入*st</td>
-</tr>
-<tr>
-<td><code>int link(char *file1, char *file2)</code></td>
-<td>为文件file1创建另一个名称(file2)</td>
-</tr>
-<tr>
-<td><code>int unlink(char *file)</code></td>
-<td>删除一个文件</td>
-</tr>
-</tbody></table>
-<p>​		表1.2：xv6系统调用（除非另外声明，这些系统调用返回0表示无误，返回-1表示出错）</p>
-<p>另外，shell是一个用于读入用户命令并执行的程序，它是用户程序而非内核的一部分。xv6 shell是Unix Bourne shell的一个简单实现。它的实现可以在(<a href="https://github.com/mit-pdos/xv6-riscv/blob/riscv//user/sh.c#L1">user&#x2F;sh.c:1</a>)中找到。</p>
-<h2 id="1-进程与内存-Processes-and-memory"><a href="#1-进程与内存-Processes-and-memory" class="headerlink" title="1. 进程与内存(Processes and memory)"></a>1. 进程与内存(Processes and memory)</h2><h2 id="2-IO与文件描述符-I-O-and-File-descriptors"><a href="#2-IO与文件描述符-I-O-and-File-descriptors" class="headerlink" title="2. IO与文件描述符(I&#x2F;O and File descriptors)"></a>2. IO与文件描述符(I&#x2F;O and File descriptors)</h2><h2 id="3-管道-Pipes"><a href="#3-管道-Pipes" class="headerlink" title="3. 管道(Pipes)"></a>3. 管道(Pipes)</h2><h2 id="4-文件系统-File-system"><a href="#4-文件系统-File-system" class="headerlink" title="4. 文件系统(File system)"></a>4. 文件系统(File system)</h2>]]></content>
-      <categories>
-        <category>OS</category>
-        <category>note</category>
-      </categories>
-      <tags>
-        <tag>OS</tag>
-        <tag>6.S081</tag>
-        <tag>xv6</tag>
       </tags>
   </entry>
 </search>
