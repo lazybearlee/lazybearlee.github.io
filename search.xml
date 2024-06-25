@@ -163,7 +163,7 @@
 </ul>
 <h2 id="7-GNU-Linux系统的结构"><a href="#7-GNU-Linux系统的结构" class="headerlink" title="7. GNU&#x2F;Linux系统的结构"></a>7. GNU&#x2F;Linux系统的结构</h2><h3 id="开源操作系统"><a href="#开源操作系统" class="headerlink" title="开源操作系统"></a>开源操作系统</h3><p>开源、闭源、混合式(hybrid)</p>
 <p>源代码与二进制代码</p>
-<p><img src="/image/note1-1719040438862.png" alt="图 1">  </p>
+<p><img src="/images/note1-1719040438862.png" alt="图 1">  </p>
 <blockquote>
 <p>GNU -&gt; GNU is Not Unix</p>
 </blockquote>
@@ -450,7 +450,7 @@
 ]]></content>
       <categories>
         <category>OS</category>
-        <category>note</category>
+        <category>Note</category>
       </categories>
       <tags>
         <tag>OS</tag>
@@ -528,7 +528,7 @@
 <li>1965年由Dijkstra为T.H.E系统设计</li>
 <li>基本思想：借用了银行借贷系统的分配策略。基于这样一些规则：</li>
 </ul>
-<p><img src="/image/note2-3-1719235595827.png" alt="图 0">  </p>
+<p><img src="/images/note2-3-1719235595827.png" alt="图 0">  </p>
 <h4 id="银行家算法"><a href="#银行家算法" class="headerlink" title="银行家算法"></a>银行家算法</h4><p>在系统处理资源申请时，判断在满足申请时，系统是否还<strong>处于安全状态</strong>？是则满足本次资源申请，否则拒绝。依此引导进程的运行次序。</p>
 <p>单类资源系统安全状态定义：设系统中有n个进程，若存在一个序列$\langle P_1,P_2,\cdots,P_n\rangle$，使得对于每个进程$P_i$，都有$P_i$的资源需求量$\leq$系统现有资源量与其他进程($P_1,\cdots,P_{i-1}$)的资源量之和，那么系统就是安全的,我们也称这个序列$\langle P_1,P_2,\cdots,P_n\rangle$为安全序列。</p>
 <h5 id="算法例子"><a href="#算法例子" class="headerlink" title="算法例子"></a>算法例子</h5><ul>
@@ -564,9 +564,9 @@
 </ol>
 <p>因此，存在一个安全序列：$\langle P_2, P_1, P_3 \rangle$。</p>
 <p>类似的，我们也可以采用相似的思路对下面的举例进行分析：</p>
-<p><img src="/image/note2-3-1719235963149.png" alt="图 1">  </p>
+<p><img src="/images/note2-3-1719235963149.png" alt="图 1">  </p>
 <p>我们会发现，按照$b\to c \to a \to d$的顺序，系统是安全的。</p>
-<h5 id="整体算法流程"><a href="#整体算法流程" class="headerlink" title="整体算法流程"></a>整体算法流程</h5><p><img src="/image/note2-3-1719236116389.png" alt="图 2">  </p>
+<h5 id="整体算法流程"><a href="#整体算法流程" class="headerlink" title="整体算法流程"></a>整体算法流程</h5><p><img src="/images/note2-3-1719236116389.png" alt="图 2">  </p>
 <h4 id="扩展银行家算法"><a href="#扩展银行家算法" class="headerlink" title="扩展银行家算法"></a>扩展银行家算法</h4><ul>
 <li><p><strong>数据结构</strong>：</p>
 <ul>
@@ -608,13 +608,13 @@
 </ul>
 </li>
 </ul>
-<h5 id="扩展银行家算法例子"><a href="#扩展银行家算法例子" class="headerlink" title="扩展银行家算法例子"></a>扩展银行家算法例子</h5><p><img src="/image/note2-3-1719236752697.png" alt="图 3">  </p>
-<p><img src="/image/note2-3-1719236841436.png" alt="图 4">  </p>
-<p><img src="/image/note2-3-1719236852726.png" alt="图 5">  </p>
-<p><img src="/image/note2-3-1719236879839.png" alt="图 6">  </p>
-<p><img src="/image/note2-3-1719236871261.png" alt="图 7">  </p>
-<p><img src="/image/note2-3-1719236934494.png" alt="图 8">  </p>
-<p><img src="/image/note2-3-1719236949411.png" alt="图 9">  </p>
+<h5 id="扩展银行家算法例子"><a href="#扩展银行家算法例子" class="headerlink" title="扩展银行家算法例子"></a>扩展银行家算法例子</h5><p><img src="/images/note2-3-1719236752697.png" alt="图 3">  </p>
+<p><img src="/images/note2-3-1719236841436.png" alt="图 4">  </p>
+<p><img src="/images/note2-3-1719236852726.png" alt="图 5">  </p>
+<p><img src="/images/note2-3-1719236879839.png" alt="图 6">  </p>
+<p><img src="/images/note2-3-1719236871261.png" alt="图 7">  </p>
+<p><img src="/images/note2-3-1719236934494.png" alt="图 8">  </p>
+<p><img src="/images/note2-3-1719236949411.png" alt="图 9">  </p>
 <h3 id="2-3-死锁检测"><a href="#2-3-死锁检测" class="headerlink" title="2.3 死锁检测"></a>2.3 死锁检测</h3><ul>
 <li>第一种方法其实就是<strong>银行家算法</strong>中的安全状态检测算法。</li>
 <li>第二种方法是<strong>资源分配图</strong>法。</li>
@@ -633,7 +633,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="/image/note2-3-1719237077582.png" alt="图 10">  </p>
+<p><img src="/images/note2-3-1719237077582.png" alt="图 10">  </p>
 <p>注意！<strong>圆是进程，方是资源。</strong></p>
 <p>注意！<strong>一个箭头表示一个资源的分配，一个箭头表示一个资源的请求。</strong></p>
 <p>注意！<strong>资源中的小点表示资源的数量。</strong></p>
@@ -662,12 +662,12 @@
 <li><p>从图中删除该进程顶点和与之相关的边，并释放该进程占用的资源。</p>
 </li>
 </ol>
-<p><img src="/image/note2-3-1719237464264.png" alt="图 11">  </p>
+<p><img src="/images/note2-3-1719237464264.png" alt="图 11">  </p>
 <ul>
 <li>资源分配图中的所有进程如果都能化简成孤立结点，则这个资源图就是<strong>可完全化简的（completely reducible）</strong>；反之，就是不可完全化简的（irrreducible）。</li>
 <li><strong>死锁定理</strong>：如果一个系统状态为死锁状态，当且仅当资源分配图是不可完全化简的。也即，如果资源图中所有的进程都成为孤立结点，则系统不会死锁；否则系统状态为死锁状态。</li>
 </ul>
-<p><img src="/image/note2-3-1719237990210.png" alt="图 12">  </p>
+<p><img src="/images/note2-3-1719237990210.png" alt="图 12">  </p>
 <p>上图是一个典型的无法完全化简的资源分配图，因此系统处于死锁状态。</p>
 <h3 id="2-4-死锁恢复"><a href="#2-4-死锁恢复" class="headerlink" title="2.4 死锁恢复"></a>2.4 死锁恢复</h3><h4 id="死锁的解除"><a href="#死锁的解除" class="headerlink" title="死锁的解除"></a>死锁的解除</h4><ul>
 <li><strong>重新启动</strong>：这是一种常用但比较粗暴的方法，虽然实现简单，但会使之前的工作全部白费，造成很大的损失和浪费。</li>
@@ -708,7 +708,7 @@
 <li>冯·诺依曼体系结构：存储器、运算器、控制器、输入设备、输出设备。</li>
 <li>存储管理的必要性：<strong>存储器一直以来都是较为珍贵的系统资源，需要合理使用。程序的逻辑空间和实际的物理空间不甚相同，需要进行映射。</strong></li>
 <li>存储结构层次：<strong>寄存器、高速缓存、主存、辅存。</strong><ul>
-<li><img src="/image/note3-1-1719279045598.png" alt="图 0"></li>
+<li><img src="/images/note3-1-1719279045598.png" alt="图 0"></li>
 </ul>
 </li>
 <li>存储管理的目的：<ul>
@@ -747,18 +747,18 @@
 <li>缺点：装入时&#x2F;执行时需要进行地址映射，效率较低。</li>
 <li>UNIX、Linux等。</li>
 <li>静态重定位：指地址定位时修改程序的逻辑地址值，<strong>完成定位后，在程序的执行期间地址将不再发生变化</strong>。特点：在程序执行之前进行地址再定位。<ul>
-<li><img src="/image/note3-1-1719279542522.png" alt="图 1"></li>
+<li><img src="/images/note3-1-1719279542522.png" alt="图 1"></li>
 </ul>
 </li>
 <li>动态重定位：程序在<strong>装入内存时，不修改</strong>程序的逻辑地址值，程序在<strong>访问物理内存之前</strong>，再实时地将逻辑地址转换成物理地址。这个过程发生在程序执行的过程中。<ul>
-<li><img src="/image/note3-1-1719279605864.png" alt="图 2"></li>
+<li><img src="/images/note3-1-1719279605864.png" alt="图 2"></li>
 <li>动态重定位的优点在于程序<strong>在执行期间可以换入和换出内存</strong>，可以解决内存紧张状态；<strong>可以在内存中移动</strong>——把内存中的碎片集中起来，可以充分利用空间；<strong>不必给程序分配连续的内存空间</strong>，可以较好的利用较小的内存块；若干用户可以共享同一程序，实现共享。不过，也需要需要附加的硬件支持，实现存储管理的软件算法也比较复杂。</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<h2 id="3-作业存储调度"><a href="#3-作业存储调度" class="headerlink" title="3 作业存储调度"></a>3 作业存储调度</h2><p><img src="/image/note3-1-1719280776867.png" alt="图 8">  </p>
+<h2 id="3-作业存储调度"><a href="#3-作业存储调度" class="headerlink" title="3 作业存储调度"></a>3 作业存储调度</h2><p><img src="/images/note3-1-1719280776867.png" alt="图 8">  </p>
 <ul>
 <li>多队列法</li>
 <li>单队列法</li>
@@ -786,20 +786,20 @@
 </li>
 </ul>
 <h3 id="单一连续分区存储管理方案"><a href="#单一连续分区存储管理方案" class="headerlink" title="单一连续分区存储管理方案"></a>单一连续分区存储管理方案</h3><p>通过一个界地址寄存器来划分用户区和系统区，用户区和系统区之间有一个界限，用户程序不能访问系统区。</p>
-<p><img src="/image/note3-1-1719280087927.png" alt="图 3">  </p>
+<p><img src="/images/note3-1-1719280087927.png" alt="图 3">  </p>
 <ul>
 <li><strong>越界检查机制</strong>：当用户程序访问系统区时，会触发异常，操作系统会终止用户程序的执行。</li>
 </ul>
-<p><img src="/image/note3-1-1719280136209.png" alt="图 4">  </p>
+<p><img src="/images/note3-1-1719280136209.png" alt="图 4">  </p>
 <p>其实就是将用户程序地址与界地址寄存器的值进行比较，如果小于等于寄存器中的值a，那么就会报错。</p>
 <p>这种方案一次只能装载一个程序，程序会独占整个用户区，如果程序过大，就无法装入，如果程序过小，就会浪费内存。</p>
 <p>比较适用于单用户、单任务的系统，不需要复杂的硬件支持。</p>
-<h3 id="固定分区存储管理方案"><a href="#固定分区存储管理方案" class="headerlink" title="固定分区存储管理方案"></a>固定分区存储管理方案</h3><p><img src="/image/note3-1-1719280311987.png" alt="图 5">  </p>
+<h3 id="固定分区存储管理方案"><a href="#固定分区存储管理方案" class="headerlink" title="固定分区存储管理方案"></a>固定分区存储管理方案</h3><p><img src="/images/note3-1-1719280311987.png" alt="图 5">  </p>
 <p>固定分区与单一连续分区的区别在于，固定分区将用户区分为若干个固定大小的分区，每个分区可以装入一个程序，这样可以同时装入多个程序。这个方案通过<strong>分区表</strong>来记录每个分区的使用情况，通过读入分区表指定表项来写入下界寄存器和上界寄存器，来确定用户程序的地址范围，通过越界检查机制来检查用户程序是否访问了对应的分区。</p>
 <ul>
 <li><strong>地址访问保护</strong><ul>
-<li><strong>上下界寄存器与地址检查</strong>：通过上下界寄存器来限制用户程序的访问范围，当用户程序访问超出范围时，会触发异常。不过也要求作业程序的地址要是绝对地址或静态可浮动地址。<br><img src="/image/note3-1-1719280430378.png" alt="图 6">  </li>
-<li><strong>基址寄存器、长度寄存器与地址检查</strong>：通过基址寄存器和长度寄存器来限制用户程序的访问范围，当用户程序访问超出范围时，会触发异常。不过也要求作业程序的地址要是相对地址&#x2F;动态可浮动地址。在这个方案里，会先检查长度寄存器，而不再检查基址寄存器。<br><img src="/image/note3-1-1719280541686.png" alt="图 7"></li>
+<li><strong>上下界寄存器与地址检查</strong>：通过上下界寄存器来限制用户程序的访问范围，当用户程序访问超出范围时，会触发异常。不过也要求作业程序的地址要是绝对地址或静态可浮动地址。<br><img src="/images/note3-1-1719280430378.png" alt="图 6">  </li>
+<li><strong>基址寄存器、长度寄存器与地址检查</strong>：通过基址寄存器和长度寄存器来限制用户程序的访问范围，当用户程序访问超出范围时，会触发异常。不过也要求作业程序的地址要是相对地址&#x2F;动态可浮动地址。在这个方案里，会先检查长度寄存器，而不再检查基址寄存器。<br><img src="/images/note3-1-1719280541686.png" alt="图 7"></li>
 </ul>
 </li>
 </ul>
@@ -807,11 +807,11 @@
 <h3 id="可变分区存储管理方案"><a href="#可变分区存储管理方案" class="headerlink" title="可变分区存储管理方案"></a>可变分区存储管理方案</h3><ul>
 <li><strong>预先不划分内存，当作业需要时向系统申请</strong>，系统从其中挖出一块给该作业，其大小等于作业所需内存的大小，然后将剩下的部分再作为空表块，给下一次分配使用。</li>
 </ul>
-<p><img src="/image/note3-1-1719280919407.png" alt="图 9">  </p>
+<p><img src="/images/note3-1-1719280919407.png" alt="图 9">  </p>
 <ul>
 <li><strong>多道连续可变分区法</strong>：多道、连续、但不固定划分内存。<ul>
 <li>管理方法：系统设置一个空闲块队列，初始状态时队列中只有一个连续的空闲块。作业到达后，以某种策略分配空间。作业撤离时，将释放的空间加入空闲队列。</li>
-<li>释放方法：相邻合并，否则插入<br><img src="/image/note3-1-1719281034137.png" alt="图 10">  </li>
+<li>释放方法：相邻合并，否则插入<br><img src="/images/note3-1-1719281034137.png" alt="图 10">  </li>
 <li>分配方法：<strong>首次适应、最佳适应、最坏适应</strong>（首次满足、最佳满足、最大满足），共同的思路是找到合适的空闲块后，从其中将作业大小的空间分给作业，而剩余部分挂入空闲队列。</li>
 </ul>
 </li>
@@ -867,7 +867,7 @@
 </li>
 </ul>
 <h3 id="可用空间管理"><a href="#可用空间管理" class="headerlink" title="可用空间管理"></a>可用空间管理</h3><p>除用队列表示可用空闲块外,也可以用数组登记可用空闲块，数组项&#x3D;用户空间总量&#x2F;基本分配单位。</p>
-<p><img src="/image/note3-1-1719281629873.png" alt="图 11">  </p>
+<p><img src="/images/note3-1-1719281629873.png" alt="图 11">  </p>
 <p>紧致：通过移动作业，使空闲区连续，减少外碎片。不过要求作业动态可浮动。</p>
 <h3 id="可再定位式分区"><a href="#可再定位式分区" class="headerlink" title="可再定位式分区"></a>可再定位式分区</h3><ul>
 <li>又称浮动分区分配，是解决碎片问题的简单而有效的办法。</li>
@@ -881,7 +881,7 @@
 <li>内存空间(地址)叫物理空间(地址)</li>
 <li>用<strong>相同长度为单位</strong>对逻辑空间<strong>等分出的每个区域叫页</strong>，对物理空间等分出的区域叫<strong>页帧（物理块）</strong>。——这其实也意味着，空闲队列中实际上存的是空闲的页帧。</li>
 </ul>
-<p><img src="/image/note3-1-1719281946007.png" alt="图 12">  </p>
+<p><img src="/images/note3-1-1719281946007.png" alt="图 12">  </p>
 <ul>
 <li>分配：系统初始时，<strong>所有页帧都在空闲队列中</strong>，当用户进程被创建时，系统按需要量从空闲队列获得相应量的页帧。</li>
 <li>回收：当用户进程终止时，系统将其占用的页帧归还到空闲队列。</li>
@@ -891,7 +891,7 @@
 <h4 id="什么是页表"><a href="#什么是页表" class="headerlink" title="什么是页表"></a>什么是页表</h4><ul>
 <li><strong>页表</strong>：是一种特殊的数据结构，放在系统空间的页表区，存放逻辑页与物理页帧的对应关系。<strong>每一个进程都拥有一个自己的页表</strong>， PCB表中有指针指向页表。</li>
 </ul>
-<p><img src="/image/note3-1-1719284937767.png" alt="图 13">  </p>
+<p><img src="/images/note3-1-1719284937767.png" alt="图 13">  </p>
 <h4 id="地址结构"><a href="#地址结构" class="headerlink" title="地址结构"></a>地址结构</h4><p>而分页时的逻辑地址有如下结构：</p>
 <p><code>P(页号)|.d(页内位移)</code></p>
 <p>分页时的物理地址有如下结构：</p>
@@ -900,14 +900,14 @@
 <p><code>P = 线性逻辑地址 / 页面大小；</code><br><code>d = 线性逻辑地址 - P*页面大小。</code></p>
 <p><strong>页面大小的考虑：</strong></p>
 <p>一般而言，我们都会将页面大小取成 2 的幂次方，这样的好处是：在我们获取页号和页内位移时，可以直接通过位运算来获取，而不需要进行除法和取余运算。</p>
-<h4 id="地址转换"><a href="#地址转换" class="headerlink" title="地址转换"></a>地址转换</h4><p><img src="/image/note3-1-1719285249017.png" alt="图 14">  </p>
+<h4 id="地址转换"><a href="#地址转换" class="headerlink" title="地址转换"></a>地址转换</h4><p><img src="/images/note3-1-1719285249017.png" alt="图 14">  </p>
 <p>有了页号$P$和页内位移$d$，我们就可以通过页表来获取物理地址了。</p>
 <p>在查找时，我们根据存放页表起始地址的寄存器，加上页号$P$的值，就可以得到页表中对应页号$P$的页表项的地址，从中读取页表项，得到页表项中的页帧号$f$，然后将页帧号$f$和页内位移$d$组合成物理地址$P.f|d$。</p>
 <p>我们实际上会关注到，页内地址是没有变化的，只有页号会变化，所以我们可以将页表项中的页帧号和页内地址组合成一个新的地址。</p>
 <h4 id="快表"><a href="#快表" class="headerlink" title="快表"></a>快表</h4><ul>
 <li><strong>快表</strong>：是页表的一个高速缓冲区，用于存放最近被访问的页表项，以减少对页表的访问次数，提高地址转换的速度。它由一组联想寄存器(TLB, Translation Lookaside Buffer，一种按内容进行并行查找的快速寄存器，访问速度比主存快得多)组成。</li>
 </ul>
-<p><img src="/image/note3-1-1719285490265.png" alt="图 15">  </p>
+<p><img src="/images/note3-1-1719285490265.png" alt="图 15">  </p>
 <p>快表对页号做了到页帧号的映射，当我们访问一个页号时，会先查找快表，如果快表中有这个页号，就直接得到页帧号，如果没有，就需要查找页表。</p>
 <p>有了快表之后，在原先的地址转换流程的查页表起始地址寄存器之前，要先去查快表，如果快表中有这个页号，就直接得到页帧号，如果没有，就需要查找页表。</p>
 <h5 id="快表的指标"><a href="#快表的指标" class="headerlink" title="快表的指标"></a>快表的指标</h5><ul>
@@ -925,14 +925,14 @@
 <h3 id="共享与保护"><a href="#共享与保护" class="headerlink" title="共享与保护"></a>共享与保护</h3><ul>
 <li><strong>共享</strong>：通过页表实现多个进程的逻辑地址空间映射到同一个物理地址空间，实现共享。</li>
 </ul>
-<p><img src="/image/note3-1-1719285965285.png" alt="图 16">  </p>
+<p><img src="/images/note3-1-1719285965285.png" alt="图 16">  </p>
 <ul>
 <li><strong>保护</strong>：通过页表实现对进程的访问权限控制，实现保护。</li>
 </ul>
 <h4 id="越界保护"><a href="#越界保护" class="headerlink" title="越界保护"></a>越界保护</h4><ul>
 <li>设置一个页表长度寄存器，用于存放页表的长度，当页号超出页表长度时，会触发异常。</li>
 </ul>
-<p><img src="/image/note3-1-1719286022762.png" alt="图 17">  </p>
+<p><img src="/images/note3-1-1719286022762.png" alt="图 17">  </p>
 <h4 id="访问保护"><a href="#访问保护" class="headerlink" title="访问保护"></a>访问保护</h4><ul>
 <li>在每个页表项中增设一存储保护域，用于说明对该页的访问权限，每一个对该页存储的访问都首先要比照是否满足该页访问权限的说明，满足则访问，否则报异常。保护域的形式类似于文件的访问权限(rwx&#x2F;rwe)。</li>
 </ul>
@@ -1067,11 +1067,11 @@
 <h5 id="进程挂起"><a href="#进程挂起" class="headerlink" title="进程挂起"></a>进程挂起</h5><ul>
 <li>进程挂起（Suspend）：是指将一个进程从内存中移动到外存中，以释放内存资源。这意味着进程没有再占用内存资源，其进程映像在磁盘上。</li>
 </ul>
-<p><img src="/image/note2-1719052818993.png" alt="图 2">  </p>
+<p><img src="/images/note2-1719052818993.png" alt="图 2">  </p>
 <h4 id="进程状态的转换图"><a href="#进程状态的转换图" class="headerlink" title="进程状态的转换图"></a>进程状态的转换图</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">[*] --&gt; Create</span><br><span class="line">Create --&gt; Ready</span><br><span class="line">Ready --&gt; Running</span><br><span class="line">Running --&gt; Ready</span><br><span class="line">Running --&gt; Blocked</span><br><span class="line">Blocked --&gt; Ready</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
 
 <p><strong>七态模型：</strong></p>
-<p><img src="/image/note2-1719053752452.png" alt="图 5">  </p>
+<p><img src="/images/note2-1719053752452.png" alt="图 5">  </p>
 <h4 id="进程的创建与结束"><a href="#进程的创建与结束" class="headerlink" title="进程的创建与结束"></a>进程的创建与结束</h4><ul>
 <li><p>进程的创建</p>
 <ul>
@@ -1146,9 +1146,9 @@
 </ul>
 </li>
 </ol>
-<p><img src="/image/note2-1719053633194.png" alt="图 3">  </p>
+<p><img src="/images/note2-1719053633194.png" alt="图 3">  </p>
 <h4 id="PCB的管理"><a href="#PCB的管理" class="headerlink" title="PCB的管理"></a>PCB的管理</h4><p>操作系统对PCB的管理采用集中统一管理。</p>
-<p><img src="/image/note2-1719053704288.png" alt="图 4">  </p>
+<p><img src="/images/note2-1719053704288.png" alt="图 4">  </p>
 <h2 id="4-进程的组织"><a href="#4-进程的组织" class="headerlink" title="4. 进程的组织"></a>4. 进程的组织</h2><ul>
 <li>线性表组织方式：把所有进程的PCB存放在一个<strong>数组</strong>中，系统通过数组下标访问每个PCB。</li>
 <li>链表组织方式：把所有具有相同状态的进程的PCB存放在一个<strong>链表</strong>中，组成一个队列。<ul>
@@ -1249,7 +1249,7 @@
 <li>将新进程插入就绪队列</li>
 </ul>
 <p>在UNIX系统中，创建进程的系统调用是<code>fork()</code>。而Windows系统中，创建进程的系统调用是<code>CreateProcess()</code>。</p>
-<p><img src="/image/note2-1719058851071.png" alt="图 6">  </p>
+<p><img src="/images/note2-1719058851071.png" alt="图 6">  </p>
 <p>以下是一段C语言代码，用于创建一个新的进程：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;</span><br><span class="line">    pid = fork();</span><br><span class="line">    <span class="comment">// fork()函数会返回两次，一次是在父进程中，一次是在子进程中</span></span><br><span class="line">    <span class="comment">// 在父进程中，pid会返回子进程的PID，而在子进程中，pid会返回0</span></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Fork Failed&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, <span class="string">&quot;This is child process!&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;This is parent process!&quot;</span>);</span><br><span class="line">        wait(<span class="literal">NULL</span>);<span class="comment">//等待子进程结束,wait函数会将子进程的退出状态传递给父进程</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1303,7 +1303,7 @@
 <li><strong>进程模式切换</strong>：一个进程既运行用户态程序，在系统调用和中断转换到核心态时运行操作系统核心程序。</li>
 <li><strong>进程切换</strong>：指进程进入操作系统核心后因为自身等事件或有更迫切需要运行的进程就绪而让出处理机，处理机转去运行其它进程。</li>
 </ul>
-<h2 id="6-进程的调度"><a href="#6-进程的调度" class="headerlink" title="6. 进程的调度"></a>6. 进程的调度</h2><p><img src="/image/note2-1719059908315.png" alt="图 7">  </p>
+<h2 id="6-进程的调度"><a href="#6-进程的调度" class="headerlink" title="6. 进程的调度"></a>6. 进程的调度</h2><p><img src="/images/note2-1719059908315.png" alt="图 7">  </p>
 <h3 id="进程切换过程"><a href="#进程切换过程" class="headerlink" title="进程切换过程"></a>进程切换过程</h3><h4 id="PlantUML-绘图"><a href="#PlantUML-绘图" class="headerlink" title="PlantUML 绘图"></a>PlantUML 绘图</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">title 进程切换过程</span><br><span class="line"></span><br><span class="line">start</span><br><span class="line">:保存处理机的上下文;</span><br><span class="line">note right: 包括程序计数器PC、处理机状态字PS、其它寄存器</span><br><span class="line">:修改当前运行进程的进程控制块内容;</span><br><span class="line">note right: 将进程状态从运行态改成其它状态</span><br><span class="line">:选择另一个进程执行;</span><br><span class="line">note right: 按照调度算法</span><br><span class="line">:修改被调度进程的进程控制块;</span><br><span class="line">note right: 将其状态改变到运行态</span><br><span class="line">:修改存储管理数据结构;</span><br><span class="line">note right: 修改进程内存起始地址</span><br><span class="line">:恢复被选进程上次切换出处理机时的处理机现场;</span><br><span class="line">note right: 按原保护的程序计数器值重置程序计数器，运行新选进程</span><br><span class="line">stop</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
 
 <h4 id="实例解释"><a href="#实例解释" class="headerlink" title="实例解释"></a>实例解释</h4><h5 id="示例：从进程A切换到进程B"><a href="#示例：从进程A切换到进程B" class="headerlink" title="示例：从进程A切换到进程B"></a>示例：从进程A切换到进程B</h5><p>假设我们有两个进程A和B，它们各自有自己的虚拟地址空间。当从进程A切换到进程B时，需要更新存储管理数据结构，以确保进程B能够正确访问其内存。</p>
@@ -1382,7 +1382,7 @@
 <li><strong>剥夺式调度</strong>：进程在运行时可能被强制中断，以便让其他进程占用CPU。用于<strong>分时系统</strong>和<strong>实时系统</strong>。主要优点在于提高系统的响应速度。</li>
 </ul>
 <p>进程调度在核心态下执行，因为进程调度需要访问进程控制块，而进程控制块是操作系统的数据结构，只有在核心态下才能访问。</p>
-<p><img src="/image/note2-1719062136501.png" alt="图 8">  </p>
+<p><img src="/images/note2-1719062136501.png" alt="图 8">  </p>
 <h3 id="引起进程调度因素"><a href="#引起进程调度因素" class="headerlink" title="引起进程调度因素"></a>引起进程调度因素</h3><ol>
 <li>进程主动放弃处理机<ul>
 <li>正在执行的进程执行完毕</li>
@@ -1409,7 +1409,7 @@
 <li><strong>当中断处理结束或自陷处理结束返回被中断进程的用户态程序执行前，若请求调度标志置上</strong>，即可马上进行进程调度与切换。<strong>如果操作系统支持这种情况下运行调度程序，即实现了剥夺方式的调度</strong>。</li>
 <li>实时系统还有其他调度与切换时机。</li>
 </ul>
-<p><img src="/image/note2-1719063319664.png" alt="图 10">  </p>
+<p><img src="/images/note2-1719063319664.png" alt="图 10">  </p>
 <h3 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h3><ul>
 <li>要求：高资源利用率、低系统开销、公平性、响应时间短、吞吐量大。</li>
 <li>与整个系统的设计目的相一致：<ul>
@@ -1435,7 +1435,7 @@
 </ul>
 </li>
 </ol>
-<p><img src="/image/note2-1719063791898.png" alt="图 11">  </p>
+<p><img src="/images/note2-1719063791898.png" alt="图 11">  </p>
 <h4 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h4><table>
 <thead>
 <tr>
@@ -1457,15 +1457,15 @@
 <h5 id="先来先服务（FCFS）——First-Come-First-Served"><a href="#先来先服务（FCFS）——First-Come-First-Served" class="headerlink" title="先来先服务（FCFS）——First Come First Served"></a>先来先服务（FCFS）——First Come First Served</h5><ul>
 <li>含义：按照作业提交的先后顺序进行调度。</li>
 </ul>
-<p><img src="/image/note2-1719063853880.png" alt="图 12">  </p>
+<p><img src="/images/note2-1719063853880.png" alt="图 12">  </p>
 <p>优点：简单、可靠；容易理解；非抢占式。<br>缺点：平均等待时间长；不适合分时系统。</p>
 <p>例如，对于同时到达的三个作业 $j_1$、$j_2$、$j_3$，它们的到达时间分别为0、1、2，执行时间分别为20、20、4。则它们的周转时间分别为20、40、42。平均周转时间为34。这明显增长了平均周转时间。</p>
 <p>对于进程的调度，可以采用甘特图来描述：</p>
-<p><img src="/image/note2-1719064558945.png" alt="图 13">  </p>
+<p><img src="/images/note2-1719064558945.png" alt="图 13">  </p>
 <h5 id="短进程优先（SPF）——Shortest-Process-First"><a href="#短进程优先（SPF）——Shortest-Process-First" class="headerlink" title="短进程优先（SPF）——Shortest Process First"></a>短进程优先（SPF）——Shortest Process First</h5><ul>
 <li>含义：按照作业的执行时间长短进行调度。也可以采用剥夺调度方式（Shortest Remaining Time First）。这种方式可以使平均等待时间最小。</li>
 </ul>
-<p><img src="/image/note2-1719064756679.png" alt="图 14">  </p>
+<p><img src="/images/note2-1719064756679.png" alt="图 14">  </p>
 <p>对于上图中的四个作业：</p>
 <ul>
 <li>若采用非剥夺方式，可先画出甘特图，然后计算平均周转时间。各个进程等待时间为：0、6、3、7，平均等待时间为4。</li>
@@ -1491,14 +1491,14 @@
 </ul>
 </li>
 </ul>
-<p><img src="/image/note2-1719065275315.png" alt="图 15">  </p>
+<p><img src="/images/note2-1719065275315.png" alt="图 15">  </p>
 <p>上述平均等待时间为：**(6+0+16+18+1)&#x2F;5&#x3D;8.2**</p>
-<p><img src="/image/note2-1719065376932.png" alt="图 16">  </p>
+<p><img src="/images/note2-1719065376932.png" alt="图 16">  </p>
 <p>上述平均等待时间为：**((1+5)+0+14+15+0)&#x2F;5&#x3D;7**</p>
 <h5 id="时间片轮转调度（RR）——Round-Robin"><a href="#时间片轮转调度（RR）——Round-Robin" class="headerlink" title="时间片轮转调度（RR）——Round Robin"></a>时间片轮转调度（RR）——Round Robin</h5><ul>
 <li>含义：按照时间片的方式进行调度。每个进程被分配一个时间片，当时间片用完后，进程被剥夺CPU，放回就绪队列，等待下一次调度。</li>
 </ul>
-<p><img src="/image/note2-1719065451457.png" alt="图 17">  </p>
+<p><img src="/images/note2-1719065451457.png" alt="图 17">  </p>
 <ul>
 <li><strong>时间片</strong>：是指CPU分配给进程的最小时间单位。时间片的大小会影响进程的响应时间和系统的吞吐量。<ul>
 <li>固定时间片：所有进程都分配相同的时间片。</li>
@@ -1517,12 +1517,12 @@
 </ul>
 </li>
 </ul>
-<p><img src="/image/note2-1719065539671.png" alt="图 18">  </p>
+<p><img src="/images/note2-1719065539671.png" alt="图 18">  </p>
 <p>上述平均等待时间为：**((57+24)+20+(37+40+17)+(57+40))&#x2F;4&#x3D;73**</p>
 <h5 id="多级反馈队列调度（MFQ）——Multilevel-Feedback-Queue"><a href="#多级反馈队列调度（MFQ）——Multilevel-Feedback-Queue" class="headerlink" title="多级反馈队列调度（MFQ）——Multilevel Feedback Queue"></a>多级反馈队列调度（MFQ）——Multilevel Feedback Queue</h5><ul>
 <li>含义：按照多个队列的方式进行调度。每个队列有不同的优先级，不同的时间片。当进程在一个队列中等待时间过长时，会被移到下一个队列中。进程<strong>被调度执行</strong>后，在<strong>被剥夺或放弃处理机</strong>后而在就绪时可以<strong>改变其就绪队列</strong>。</li>
 </ul>
-<p><img src="/image/note2-1719065607216.png" alt="图 19">  </p>
+<p><img src="/images/note2-1719065607216.png" alt="图 19">  </p>
 <p>设计另一个多级反馈队列调度算法的例子：</p>
 <ul>
 <li>以<strong>优先级</strong>设置多队列。</li>
@@ -1534,7 +1534,7 @@
 <li>时钟驱动法：各任务的调度安排通常是在系统运行前就确定了。硬实时系统的任务是固定的和可知的。系统以规则的间隔时间调度任务执行。一个定时器被周期性地设置，时间到期后，系统启动要执行的任务。</li>
 <li>加权轮转法：进程的权就是分配给它的一小部分处理机时间。轮转时，不同的进程可以获得不同的处理机时间。广泛用在高速开关网的实时控制中。</li>
 </ul>
-<h5 id="作业调度算法——FIFO、SJF和最高响应比优先（HRRN）"><a href="#作业调度算法——FIFO、SJF和最高响应比优先（HRRN）" class="headerlink" title="作业调度算法——FIFO、SJF和最高响应比优先（HRRN）"></a>作业调度算法——FIFO、SJF和最高响应比优先（HRRN）</h5><p><img src="/image/note2-1719065913022.png" alt="图 20"> </p>
+<h5 id="作业调度算法——FIFO、SJF和最高响应比优先（HRRN）"><a href="#作业调度算法——FIFO、SJF和最高响应比优先（HRRN）" class="headerlink" title="作业调度算法——FIFO、SJF和最高响应比优先（HRRN）"></a>作业调度算法——FIFO、SJF和最高响应比优先（HRRN）</h5><p><img src="/images/note2-1719065913022.png" alt="图 20"> </p>
 <p><strong>响应比R</strong>定义如下： <strong>R &#x3D;(W+T)&#x2F;T &#x3D; 1+W&#x2F;T</strong>（W为作业等待时间，T作业估计运行时间）</p>
 <p>优点：结合了先来先服务、短作业优先的方法。优先运行短作业和等待时间足够长的长作业。</p>
 <h2 id="7-线程"><a href="#7-线程" class="headerlink" title="7. 线程"></a>7. 线程</h2><h3 id="线程的概念"><a href="#线程的概念" class="headerlink" title="线程的概念"></a>线程的概念</h3><h4 id="轻权进程（Lightweight-Process）"><a href="#轻权进程（Lightweight-Process）" class="headerlink" title="轻权进程（Lightweight Process）"></a>轻权进程（Lightweight Process）</h4><ul>
@@ -1551,7 +1551,7 @@
 <li>一个例子是，我们可以有一个进程，其中包含一个GUI线程、一个网络线程、一个I&#x2F;O线程等。它们分别处理不同的任务，但是共享进程的资源（如内存、文件等）。</li>
 <li>由于线程共享进程的资源（地址空间、可用数据），附带资源不多，创建和撤销线程的开销小，线程切换速度快。</li>
 </ul>
-<h4 id="线程的结构与特点"><a href="#线程的结构与特点" class="headerlink" title="线程的结构与特点"></a>线程的结构与特点</h4><p><img src="/image/note2-1719129457138.png" alt="图 21">  </p>
+<h4 id="线程的结构与特点"><a href="#线程的结构与特点" class="headerlink" title="线程的结构与特点"></a>线程的结构与特点</h4><p><img src="/images/note2-1719129457138.png" alt="图 21">  </p>
 <ul>
 <li>线程作为基本的调度单位，有与进程相似的状态：<strong>就绪、运行、阻塞</strong>等。</li>
 <li>同一进程中的所有线程都共享进程的存储空间和分配资源。</li>
@@ -1577,9 +1577,9 @@
 <li>并发性：进程之间、进程内的多线程之间可并发执行。</li>
 <li>安全性：同一进程的多线程共享进程的所有资源，一个线程可以改变另一个线程的数据，共享方便。</li>
 </ul>
-<h3 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h3><h4 id="用户级线程"><a href="#用户级线程" class="headerlink" title="用户级线程"></a>用户级线程</h4><p><img src="/image/note2-1719129925322.png" alt="图 22">  </p>
+<h3 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h3><h4 id="用户级线程"><a href="#用户级线程" class="headerlink" title="用户级线程"></a>用户级线程</h4><p><img src="/images/note2-1719129925322.png" alt="图 22">  </p>
 <p>完全由用户来管理线程的切换，处理机在两个线程间切换时不用进入到核心态执行，节省了用户态与核心态之间切换的开销。不过，用户级线程的缺点是，当一个线程阻塞时，整个进程都会阻塞。</p>
-<h4 id="核心级线程"><a href="#核心级线程" class="headerlink" title="核心级线程"></a>核心级线程</h4><p><img src="/image/note2-1719130157061.png" alt="图 23">  </p>
+<h4 id="核心级线程"><a href="#核心级线程" class="headerlink" title="核心级线程"></a>核心级线程</h4><p><img src="/images/note2-1719130157061.png" alt="图 23">  </p>
 <p>核心可以调度一个进程中的多个线程同时运行，当某线程发生阻塞，可以调度其它线程执行。</p>
 <p>优点是充分发挥了多处理机的并行工作能力，但是在同一进程间线程控制权转移时，用户态和核心态之间的切换开销较大。</p>
 <p>与用户级线程的区别主要在于线程表的位置，用户级线程的线程表在用户空间，核心级线程的线程表在内核空间。</p>
@@ -1590,7 +1590,7 @@
 </li>
 <li><strong>核心级线程</strong>：有关线程的管理工作都由内核完成。应用程序通过系统调用来创建或撤销线程。Windows、Linux等操作系统支持核心级线程。</li>
 <li><strong>混合级线程</strong>：既支持用户级线程，也支持核心级线程。用户级多个线程对应核心级多个线程。当内核了解到一个线程阻塞后，通知运行时系统，重新调度其他线程。<ul>
-<li><img src="/image/note2-1719130563270.png" alt="图 26">  </li>
+<li><img src="/images/note2-1719130563270.png" alt="图 26">  </li>
 <li>在这种模式下，处理机的调度程序看到的核心级线程可能对应着多个用户级线程。当一个用户级线程及对应核心级线程阻塞时，处理机的调度程序可以选择另一个核心级线程执行。</li>
 </ul>
 </li>
@@ -1608,12 +1608,12 @@
 <li>分类：<ul>
 <li>按照交换信息量的多少：<ul>
 <li>低级通信：只能传递状态和整数值（控制信息）<ul>
-<li><img src="/image/note2-1719131093294.png" alt="图 27">  </li>
+<li><img src="/images/note2-1719131093294.png" alt="图 27">  </li>
 <li>不过只能传递少量信息，效率低，如果需要传递大量信息，需要多次通信。同时，也会导致编程复杂，用户直接实现通信细节。</li>
 </ul>
 </li>
 <li>高级通信：提高信号通信效率，传递大量数据，减轻程序编制的复杂度<ul>
-<li><img src="/image/note2-1719132135194.png" alt="图 28"></li>
+<li><img src="/images/note2-1719132135194.png" alt="图 28"></li>
 </ul>
 </li>
 </ul>
@@ -1633,7 +1633,7 @@
 </ul>
 <h4 id="共享内存模式-间接通信"><a href="#共享内存模式-间接通信" class="headerlink" title="共享内存模式(间接通信)"></a>共享内存模式(间接通信)</h4><ul>
 <li><strong>共享内存</strong>：是指两个或多个进程共享一个给定的存储区。这种通信方式是最快的一种通信方式，因为进程可以直接读写共享内存，不需要操作系统的介入。<ul>
-<li><img src="/image/note2-1719133007134.png" alt="图 29"></li>
+<li><img src="/images/note2-1719133007134.png" alt="图 29"></li>
 </ul>
 </li>
 <li>内存共享区的互斥要通过其它机制实现；数据的发送方不关心数据由谁接收，数据的接收方也不关心数据是由谁发送的，存在安全隐患。</li>
@@ -1650,7 +1650,7 @@
 <li>Send (MailBox, Message)；<br>Receive (MailBox, Message)；</li>
 <li>系统为每个信箱设一个消息队列，消息发送和接收都指向该消息队列。</li>
 <li>很容易建立双向通讯链(只要对信箱说明为读写打开)。；不过必须有一个通讯双方共享的一个<strong>逻辑消息队列</strong>（ UNIX的PIPE，FIFO及IPC消息传递机制都属于这种形式），使用时消息发送者约定写方式打开信箱,消息接收者约定读方式打开信箱或同时读写打开。</li>
-<li><img src="/image/note2-1719133445875.png" alt="图 30"></li>
+<li><img src="/images/note2-1719133445875.png" alt="图 30"></li>
 </ul>
 </li>
 </ul>
@@ -1666,8 +1666,8 @@
 <ul>
 <li>系统有一空闲缓冲区池，每个进程有一个消息缓冲队列。缓冲区用于存放消息及消息发送者pid和消息链(用pid定位进程PCB表)。</li>
 <li>每个进程的消息队列存放发送给该进程的消息，队列头存于<strong>PCB</strong>中，同时在PCB中设一互斥信号量<strong>mutex(初值为1)<strong>和</strong>信号量Sm（初值为0）</strong>，Sm用于记录消息队列中的消息数。</li>
-<li><img src="/image/note2-1719133730050.png" alt="图 31">  </li>
-<li><img src="/image/note2-1719133784108.png" alt="图 32">  </li>
+<li><img src="/images/note2-1719133730050.png" alt="图 31">  </li>
+<li><img src="/images/note2-1719133784108.png" alt="图 32">  </li>
 <li>实际流程是，发送进程使用发送原语向接收进程发送消息，发送的消息会被放入接收进程的消息队列中，接收进程使用接收原语接收消息。这里面存在的临界资源是<strong>消息队列</strong>，需要使用互斥信号量进行保护。</li>
 </ul>
 </li>
@@ -1680,7 +1680,7 @@
 <p>需要注意的是，上面提到的<strong>new,dispose</strong>函数对<strong>空缓冲<br>区池</strong>的访问也需要互斥。</p>
 <h5 id="提高并发性：将一个共享资源分解为多个更小的共享资源"><a href="#提高并发性：将一个共享资源分解为多个更小的共享资源" class="headerlink" title="提高并发性：将一个共享资源分解为多个更小的共享资源"></a>提高并发性：将一个共享资源分解为多个更小的共享资源</h5><p>将原来的生产者消费者问题的共享资源–缓冲池（含满、空缓冲区队列），变为n（n个进程满缓冲区队列）+1（空缓冲区队列）个共享资源。</p>
 <h3 id="管道通信"><a href="#管道通信" class="headerlink" title="管道通信"></a>管道通信</h3><p>是一种信息流缓冲机构， UNIX系统中管道基于<strong>文件系统</strong>，在内核中通过<strong>文件描述符</strong>表示。管道以<strong>先进先出(FIFO)方式</strong>组织数据传输。</p>
-<p><img src="/image/note2-1719134308101.png" alt="图 33">  </p>
+<p><img src="/images/note2-1719134308101.png" alt="图 33">  </p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//调用pipe()函数创建管道</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pipe</span><span class="params">(<span class="type">int</span> fd[<span class="number">2</span>])</span>; </span><br><span class="line">  <span class="comment">// fd[0]为管道里的读取端</span></span><br><span class="line">  <span class="comment">// fd[1]则为管道的写入端。 </span></span><br><span class="line"><span class="comment">//通过write()函数写入信息</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">write</span> <span class="params">(<span class="type">int</span> handle,<span class="type">char</span> *buf,<span class="type">unsigned</span> len)</span></span><br><span class="line"><span class="comment">//进程通过read()函数读取信息</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">read</span> <span class="params">(<span class="type">int</span> handle,<span class="type">void</span> *buf,<span class="type">unsigned</span> len)</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="管道的特点"><a href="#管道的特点" class="headerlink" title="管道的特点"></a>管道的特点</h4><ul>
@@ -1765,7 +1765,7 @@
 </ul>
 <h3 id="1-2-并发编程"><a href="#1-2-并发编程" class="headerlink" title="1.2 并发编程"></a>1.2 并发编程</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">start</span><br><span class="line">fork</span><br><span class="line">  :Task1;</span><br><span class="line">fork again</span><br><span class="line">  :Task2;</span><br><span class="line">fork again</span><br><span class="line">  :Task3;</span><br><span class="line">end fork</span><br><span class="line">:Task4;</span><br><span class="line">stop</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
 
-<p><img src="/image/note2-2-1719152050658.png" alt="图 0">  </p>
+<p><img src="/images/note2-2-1719152050658.png" alt="图 0">  </p>
 <ul>
 <li><p>三种并发编程的方法</p>
 <ul>
@@ -1781,7 +1781,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">Parbegin</span><br><span class="line">    S1;</span><br><span class="line">    S2;</span><br><span class="line">Parend</span><br><span class="line">S3;</span><br></pre></td></tr></table></figure>
 
 <p>但是，仍然存在着用Parbegin&#x2F;Parend语句无法描述的并发优先关系。</p>
-<p><img src="/image/note2-2-1719152276700.png" alt="图 1">  </p>
+<p><img src="/images/note2-2-1719152276700.png" alt="图 1">  </p>
 <p>而对于这样的并发优先关系，就有必要引入其他的并发控制语句，如：并发信号量机制。</p>
 <h3 id="1-4-并发执行实现"><a href="#1-4-并发执行实现" class="headerlink" title="1.4 并发执行实现"></a>1.4 并发执行实现</h3><ul>
 <li>实现并发执行，需要通过操作系统支持的<strong>进程</strong>或<strong>线程</strong>机制来实现。</li>
@@ -1789,7 +1789,7 @@
 </ul>
 <p>例如，Linux提供了<code>fork()</code>和<code>exec()</code>等系统调用，可以用于创建进程和执行程序。</p>
 <ul>
-<li><code>fork()</code>：创建一个新进程。该系统调用执行完成后，系统已创建了一个子进程，该子进程逻辑复制（共享）了父进程的程序，复制了父进程的数据段和栈段。也就是说不管是父进程还是子进程，在占有处理机后，都从系统调用的返回点开始运行，父进程系统调用的返回值是子进程的进程标识<code>pid</code>；子进程的返回值是<code>0</code>，子进程从<code>trap</code>指令后一条指令开始运行。<br>  <img src="/image/note2-2-1719152517272.png" alt="图 2">  </li>
+<li><code>fork()</code>：创建一个新进程。该系统调用执行完成后，系统已创建了一个子进程，该子进程逻辑复制（共享）了父进程的程序，复制了父进程的数据段和栈段。也就是说不管是父进程还是子进程，在占有处理机后，都从系统调用的返回点开始运行，父进程系统调用的返回值是子进程的进程标识<code>pid</code>；子进程的返回值是<code>0</code>，子进程从<code>trap</code>指令后一条指令开始运行。<br>  <img src="/images/note2-2-1719152517272.png" alt="图 2">  </li>
 <li><code>exec()</code>：执行一个程序。该系统调用执行完成后，系统已经用新的程序替换了当前进程的程序，新程序的代码段、数据段和栈段都已经加载到内存中，当前进程的程序已经被新程序替换，新程序从<code>trap</code>指令后一条指令开始运行。</li>
 <li><code>exit(status)</code>：结束一个进程。该系统调用执行完成后，系统已经结束了当前进程，进程的资源已经被释放，进程的状态已经被设置为<code>ZOMBIE</code>状态，进程的退出状态为<code>status</code>。然后，操作系统会将进程的退出状态传递给父进程，父进程可以通过<code>wait()</code>系统调用来获取子进程的退出状态。</li>
 <li><code>wait(&amp;status)</code>：等待一个进程结束。该系统调用执行完成后，系统已经等待了一个子进程结束，当子进程结束后，系统会将子进程的退出状态传递给父进程，父进程可以通过<code>status</code>参数来获取子进程的退出状态。</li>
@@ -1804,7 +1804,7 @@
 </ul>
 <h3 id="1-6-同步-互斥与临界段问题"><a href="#1-6-同步-互斥与临界段问题" class="headerlink" title="1.6 同步&#x2F;互斥与临界段问题"></a>1.6 同步&#x2F;互斥与临界段问题</h3><h4 id="同步问题"><a href="#同步问题" class="headerlink" title="同步问题"></a>同步问题</h4><ul>
 <li>例：如果一个进程P1执行S1，S3，进程P2执行S2，则P1在执行S3之前必须等待P2执行完S2。<ul>
-<li><img src="/image/note2-2-1719152818483.png" alt="图 3"></li>
+<li><img src="/images/note2-2-1719152818483.png" alt="图 3"></li>
 </ul>
 </li>
 </ul>
@@ -1817,7 +1817,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">Parbegin</span><br><span class="line">   <span class="title function_">A</span><span class="params">(amount)</span>&#123;</span><br><span class="line">    R1=balance;</span><br><span class="line">    R2=amount;</span><br><span class="line">    R1=R1+R2;</span><br><span class="line">    balance=R1;</span><br><span class="line">    &#125;;</span><br><span class="line">   B(amount) &#123;</span><br><span class="line">    R1=balance;</span><br><span class="line">    R2=amount;</span><br><span class="line">    R1=R1-R2;</span><br><span class="line">    balance=R1;</span><br><span class="line">    &#125;;</span><br><span class="line">Parend;</span><br></pre></td></tr></table></figure>
 
 <p>在上面这段程序中，我们是要求两个进程A和B对共享变量<code>balance</code>进行操作的时候应该是互斥的，否则会导致数据不一致。</p>
-<h4 id="有限缓冲区的生产者-消费者问题（生产者和消费者共享一个产品缓冲链）"><a href="#有限缓冲区的生产者-消费者问题（生产者和消费者共享一个产品缓冲链）" class="headerlink" title="有限缓冲区的生产者&#x2F;消费者问题（生产者和消费者共享一个产品缓冲链）"></a>有限缓冲区的生产者&#x2F;消费者问题（生产者和消费者共享一个产品缓冲链）</h4><p><img src="/image/note2-2-1719152998209.png" alt="图 4">  </p>
+<h4 id="有限缓冲区的生产者-消费者问题（生产者和消费者共享一个产品缓冲链）"><a href="#有限缓冲区的生产者-消费者问题（生产者和消费者共享一个产品缓冲链）" class="headerlink" title="有限缓冲区的生产者&#x2F;消费者问题（生产者和消费者共享一个产品缓冲链）"></a>有限缓冲区的生产者&#x2F;消费者问题（生产者和消费者共享一个产品缓冲链）</h4><p><img src="/images/note2-2-1719152998209.png" alt="图 4">  </p>
 <ul>
 <li>生产者进程：生产者进程是一个周期性进程，它的任务是生产产品并将产品放入缓冲区。</li>
 <li>消费者进程：消费者进程是一个周期性进程，它的任务是从缓冲区中取出产品并消费产品。</li>
@@ -1846,7 +1846,7 @@
 <li><strong>有空让进</strong>：在临界区外运行的进程不可阻止其他进程进入临界区；</li>
 <li><strong>有限等待</strong>：进程进入临界区的等待时间应有限，不应该使要进入临界区的进程无限等待。</li>
 </ul>
-<p><img src="/image/note2-2-1719154478754.png" alt="图 5">  </p>
+<p><img src="/images/note2-2-1719154478754.png" alt="图 5">  </p>
 <h3 id="2-2-解决进程之间互斥的方法"><a href="#2-2-解决进程之间互斥的方法" class="headerlink" title="2.2 解决进程之间互斥的方法"></a>2.2 解决进程之间互斥的方法</h3><h4 id="软件实现"><a href="#软件实现" class="headerlink" title="软件实现"></a>软件实现</h4><h5 id="实现互斥的软件算法"><a href="#实现互斥的软件算法" class="headerlink" title="实现互斥的软件算法"></a>实现互斥的软件算法</h5><ul>
 <li>进入临界段之前要<strong>申请</strong>，获得批准方可进入；</li>
 <li>退出临界段之后要<strong>声明</strong>，以便其他进程进入。</li>
@@ -1869,7 +1869,7 @@
 <h5 id="Dekker算法"><a href="#Dekker算法" class="headerlink" title="Dekker算法"></a>Dekker算法</h5><ul>
 <li>Dekker算法首先有一个初步构想：定义全局变量turn，值0、1分别标志进程P0和P1可以进入CS：</li>
 </ul>
-<p><img src="/image/note2-2-1719154869681.png" alt="图 6">  </p>
+<p><img src="/images/note2-2-1719154869681.png" alt="图 6">  </p>
 <p>而以上过程可能会导致某个进程一直在等待，也叫<strong>忙等待（busy waiting）</strong>。</p>
 <p>而以上过程也违背了准则4，即<strong>有限等待</strong>。</p>
 <p>同时，即使临界区此时为空，由于turn的值为1，P0也无法进入临界区。这违反了准则3——<strong>有空让进</strong>。</p>
@@ -1998,7 +1998,7 @@
 <p>  那么，在上面的情况下，P0进程中的临界区会在P1进程中的余下区之前执行。</p>
 </li>
 </ul>
-<h5 id="信号量机制的应用举例"><a href="#信号量机制的应用举例" class="headerlink" title="信号量机制的应用举例"></a>信号量机制的应用举例</h5><p><img src="/image/note2-2-1719211390686.png" alt="图 7">  </p>
+<h5 id="信号量机制的应用举例"><a href="#信号量机制的应用举例" class="headerlink" title="信号量机制的应用举例"></a>信号量机制的应用举例</h5><p><img src="/images/note2-2-1719211390686.png" alt="图 7">  </p>
 <p>在如上的图中，语句S1在S2和S3之前执行，而S2和S3是并发执行的，S4在S2后执行，S5在S4后执行，S6在S3和S4之后执行，S7在S5和S6之后执行。我们可以设置如下的信号量机制：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> s1 = <span class="number">1</span>, s2 = <span class="number">0</span>, s3 = <span class="number">0</span>, s4 = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">Parbegin</span><br><span class="line">    <span class="title function_">P0</span><span class="params">()</span> &#123;</span><br><span class="line">        P(s1);</span><br><span class="line">        S1;</span><br><span class="line">        V(s2);</span><br><span class="line">        S2;</span><br><span class="line">        S4;</span><br><span class="line">        V(s3);</span><br><span class="line">        S5;</span><br><span class="line">        V(s4);</span><br><span class="line">    &#125;</span><br><span class="line">    P1() &#123;</span><br><span class="line">        P(s2);</span><br><span class="line">        S3;</span><br><span class="line">        P(s3);</span><br><span class="line">        s6;</span><br><span class="line">        P(s4);</span><br><span class="line">        S7;</span><br><span class="line">    &#125;</span><br><span class="line">Parend;</span><br></pre></td></tr></table></figure>
 
@@ -2032,7 +2032,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="/image/note2-2-1719212407468.png" alt="图 10">  </p>
+<p><img src="/images/note2-2-1719212407468.png" alt="图 10">  </p>
 <ul>
 <li><strong>数据结构</strong>：</li>
 </ul>
@@ -2126,7 +2126,7 @@
 <h3 id="3-3-哲学家就餐问题"><a href="#3-3-哲学家就餐问题" class="headerlink" title="3.3 哲学家就餐问题"></a>3.3 哲学家就餐问题</h3><ul>
 <li>问题描述：五个哲学家五只筷子，哲学家循环做着思考和吃饭的动作，吃饭程序是：先取左边筷子，再取右边筷子，再吃饭，再放筷子。</li>
 </ul>
-<p><img src="/image/note2-2-1719217315316.png" alt="图 11">  </p>
+<p><img src="/images/note2-2-1719217315316.png" alt="图 11">  </p>
 <h4 id="初步设想"><a href="#初步设想" class="headerlink" title="初步设想"></a>初步设想</h4><ul>
 <li>我们可以为每个筷子设置一个信号量，表示筷子是否被占用。当一个哲学家需要用筷子时，他会先检查左右两只筷子是否都可用，如果可用，就分别获取左右筷子，然后开始吃饭。吃完后，他会释放左右两只筷子，然后继续思考。</li>
 </ul>
@@ -2252,7 +2252,7 @@
  <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">semaphore a_full = <span class="number">0</span>, b_full = <span class="number">0</span>;</span><br><span class="line">semaphore a_empty = <span class="number">10</span>, b_empty = <span class="number">10</span>;</span><br><span class="line">semaphore mutex_a = <span class="number">1</span>, mutex_b = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">producer_a ()&#123;</span><br><span class="line">    produce_a();</span><br><span class="line">    P(a_empty);</span><br><span class="line">    P(mutex_a);</span><br><span class="line">    put_a();</span><br><span class="line">    V(mutex_a);</span><br><span class="line">    V(a_full);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">producer_b ()&#123;</span><br><span class="line">    produce_b();</span><br><span class="line">    P(b_empty);</span><br><span class="line">    P(mutex_b);</span><br><span class="line">    put_b();</span><br><span class="line">    V(mutex_b);</span><br><span class="line">    V(b_full);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">worker ()&#123;</span><br><span class="line">    P(a_full);</span><br><span class="line">    P(mutex_a);</span><br><span class="line">    get_a();</span><br><span class="line">    V(mutex_a);</span><br><span class="line">    V(a_empty);</span><br><span class="line">    P(b_full);</span><br><span class="line">    P(mutex_b);</span><br><span class="line">    get_b();</span><br><span class="line">    V(mutex_b);</span><br><span class="line">    V(b_empty);</span><br><span class="line">    produce();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>某寺庙有小和尚、老和尚若干，有一水缸，由小和尚提水入缸供老和尚饮用。水缸可容 10桶水，水取自同一井中。水井径窄，每次只能容一个桶取水。水桶总数为3个。每次入缸取水仅为1桶水，且不可同时进行。试给出有关从缸取水、入水的算法描述。</p>
- <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    ```</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span> 如下图所示，三个合作进程P1,P2,P3,它们都需要通过同一设备输入各自的数据a,b,c,该输入设备必须互斥地使用，而且其第一个数据必须由P1进程读取，第二个数据必须由P2进程读取，第三个数据必须由P3进程读取。然后，三个进程分别对输入数据进行下列计算：P1:x=a+b; P2:y=a*b; P3:z=y+c-a;最后，P1进程通过所连接的打印机将计算结果x,y,z的值打印出来。请用信号量实现它们的同步。</span><br><span class="line"></span><br><span class="line">    ![图 <span class="number">12</span>](image/note2<span class="number">-2</span><span class="number">-1719234457173.</span>png)  </span><br><span class="line"></span><br><span class="line">    ```c</span><br></pre></td></tr></table></figure></li>
+ <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    ```</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span> 如下图所示，三个合作进程P1,P2,P3,它们都需要通过同一设备输入各自的数据a,b,c,该输入设备必须互斥地使用，而且其第一个数据必须由P1进程读取，第二个数据必须由P2进程读取，第三个数据必须由P3进程读取。然后，三个进程分别对输入数据进行下列计算：P1:x=a+b; P2:y=a*b; P3:z=y+c-a;最后，P1进程通过所连接的打印机将计算结果x,y,z的值打印出来。请用信号量实现它们的同步。</span><br><span class="line"></span><br><span class="line">    ![图 <span class="number">12</span>](images/note2<span class="number">-2</span><span class="number">-1719234457173.</span>png)  </span><br><span class="line"></span><br><span class="line">    ```c</span><br></pre></td></tr></table></figure></li>
 </ol>
 ]]></content>
       <categories>
