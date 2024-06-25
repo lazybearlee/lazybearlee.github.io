@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>操作系统笔记1——操作系统结构</title>
+    <url>/2024/06/21/note1/</url>
+    <content><![CDATA[<h1 id="操作系统笔记1——操作系统结构"><a href="#操作系统笔记1——操作系统结构" class="headerlink" title="操作系统笔记1——操作系统结构"></a>操作系统笔记1——操作系统结构</h1><h2 id="1-操作系统的定义"><a href="#1-操作系统的定义" class="headerlink" title="1. 操作系统的定义"></a>1. 操作系统的定义</h2><p>什么是OS？从操作系统扮演的角色来看，它是一个处于APP和硬件之间的软件系统，扮演了一个中间人的角色。</p>
+<p>从<strong>用户</strong>的角度来看，操作系统是一个控制程序，为用户提供一个<strong>方便</strong>且<strong>高效</strong>的操作环境。</p>
+<p>从<strong>硬件</strong>的角度来看，操作系统是一个资源管理器，它管理着计算机的硬件资源。</p>
+<h2 id="2-计算机系统的组成"><a href="#2-计算机系统的组成" class="headerlink" title="2. 计算机系统的组成"></a>2. 计算机系统的组成</h2><p>在硬盘上有一个 <code>boot sector</code>，当计算机启动时，BIOS会将这个 <code>boot sector</code> 加载到内存中。这个 <code>boot sector</code> 里面有一个MBR（Master Boot Record），MBR 里面有一个引导程序，这个引导程序会加载操作系统的内核。</p>
+<p>而在操作系统启动后，会等待 <strong>随机事件(Random Event)</strong> 的发生，当随机事件发生时，操作系统会调用相应的<strong>中断</strong>处理程序。这些随机事件包括：时钟中断、硬件中断、软件中断等。</p>
+<p><strong>存储系统</strong>，包括易失性的内存和非易失性的硬盘。<br>操作系统还包括<strong>I&#x2F;O设备的管理</strong>，包括键盘、鼠标、显示器、打印机等。</p>
+<h2 id="3-计算机系统的体系结构"><a href="#3-计算机系统的体系结构" class="headerlink" title="3. 计算机系统的体系结构"></a>3. 计算机系统的体系结构</h2><ol>
+<li>单核系统</li>
+<li>多核系统</li>
+<li>分布式系统<ol>
+<li>LAN</li>
+<li>WAN</li>
+<li>SAN(Storage Area Network)</li>
+</ol>
+</li>
+</ol>
+<h2 id="4-操作系统的结构"><a href="#4-操作系统的结构" class="headerlink" title="4. 操作系统的结构"></a>4. 操作系统的结构</h2><ol>
+<li>多道程序设计</li>
+<li>分时系统</li>
+</ol>
+<p>CPU调度-&gt;交换-&gt;虚拟内存-&gt;硬盘</p>
+<p>文件-&gt;同步&#x2F;异步（&#x3D;随机）-&gt;死锁</p>
+<h2 id="5-操作系统的服务"><a href="#5-操作系统的服务" class="headerlink" title="5. 操作系统的服务"></a>5. 操作系统的服务</h2><ul>
+<li>用户和应用程序</li>
+<li>User Interface<br>  GUI&#x2F;Batch&#x2F;Shell(Command Line Interface)</li>
+<li>系统调用(System Call)</li>
+<li>内核服务(Kernel Service)<br>  程序执行&#x2F;I&#x2F;O操作&#x2F;文件系统&#x2F;进程管理&#x2F;内存管理&#x2F;网络管理&#x2F;进程通信&#x2F;资源分配&#x2F;错误检测&#x2F;保护和安全</li>
+<li>硬件设备</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">User -&gt; GUIAndBatchAndShell: User Interface</span><br><span class="line">GUIAndBatchAndShell -&gt; SystemCall: System Call</span><br><span class="line">SystemCall -&gt; KernelService: Kernel Service</span><br><span class="line">KernelService -&gt; Hardware: Hardware</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-1-User-Interface"><a href="#5-1-User-Interface" class="headerlink" title="5.1 User Interface"></a>5.1 User Interface</h3><p>几乎所有的操作系统都有一个用户接口(UI)，用户通过UI与操作系统进行交互。</p>
+<ul>
+<li>GUI</li>
+<li>Batch<br>  支持批处理作业，由原来的顺序执行，到可以有条件执行、循环执行、并行执行等。</li>
+<li>Shell&#x2F;CLI</li>
+</ul>
+<h3 id="5-2-System-Call"><a href="#5-2-System-Call" class="headerlink" title="5.2 System Call"></a>5.2 System Call</h3><p><strong>系统调用</strong>提供了访问和使用操作系统所提供的服务的接口。它的实现代码是操作系统级的，这个接口通常面向程序员。</p>
+<p>而**API(Application Programming Interface)**是面向应用程序的，它是由系统调用构建的。一般而言，API是指明了函数的参数和返回值的一组函数。开发人员往往通过API间接的调用系统调用。</p>
+<h4 id="双重模式"><a href="#双重模式" class="headerlink" title="双重模式"></a>双重模式</h4><p>现代计算机系统有一个特殊硬件用来划分系统的运行状态，至少有两种运行状态：</p>
+<ul>
+<li><strong>用户态(User Mode)</strong>:执行用户代码</li>
+<li><strong>内核态(Kernel Mode)</strong>:执行操作系统代码</li>
+</ul>
+<p>目的是确保操作系统的正确执行。</p>
+<p>实现方式：用一个硬件模式位来区分用户态和内核态，当硬件检测到一个特殊的指令时，会切换到内核态。0表示内核态，1表示用户态。</p>
+<h4 id="运行模式的切换"><a href="#运行模式的切换" class="headerlink" title="运行模式的切换"></a>运行模式的切换</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">User -&gt; SystemCall: System Call</span><br><span class="line">SystemCall -&gt; Kernel: Kernel Mode</span><br><span class="line">Kernel -&gt; User: User Mode</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">App</span><br><span class="line">----&gt;---&gt;System Call    </span><br><span class="line">          |             ^</span><br><span class="line">          |Trap         |Return</span><br><span class="line">          v             |</span><br><span class="line">       Kernel----&gt;System Code</span><br></pre></td></tr></table></figure>
+
+<p>从用户态切换到内核态也叫做<strong>陷入</strong>，从内核态切换到用户态也叫做<strong>返回</strong>。</p>
+<h4 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h4><ul>
+<li>每个系统调用都有一个唯一的编号，这个编号被传递给操作系统，操作系统根据这个编号来调用相应的服务。这个编号也被称为<strong>系统调用号</strong>。</li>
+<li>用户代码调用API时，会像系统调用接口指明系统调用号，然后操作系统会根据这个号去索引表中检索系统调用代码在内核中的位置。——类似中断向量表。</li>
+</ul>
+<h2 id="6-操作系统的构建方式"><a href="#6-操作系统的构建方式" class="headerlink" title="6. 操作系统的构建方式"></a>6. 操作系统的构建方式</h2><h3 id="操作系统的设计思路"><a href="#操作系统的设计思路" class="headerlink" title="操作系统的设计思路"></a>操作系统的设计思路</h3><ul>
+<li>设计目标<ul>
+<li>用户目标</li>
+<li>系统目标</li>
+</ul>
+</li>
+<li>机制与策略<ul>
+<li>机制：如何做</li>
+<li>策略：做什么</li>
+<li>微内核操作系统</li>
+<li>联想到策略模式</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-GNU-Linux系统的结构"><a href="#7-GNU-Linux系统的结构" class="headerlink" title="7. GNU&#x2F;Linux系统的结构"></a>7. GNU&#x2F;Linux系统的结构</h2><h3 id="开源操作系统"><a href="#开源操作系统" class="headerlink" title="开源操作系统"></a>开源操作系统</h3><p>开源、闭源、混合式(hybrid)</p>
+<p>源代码与二进制代码</p>
+<p><img src="/images/note1-1719040438862.png" alt="图 1">  </p>
+<blockquote>
+<p>GNU -&gt; GNU is Not Unix</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>OS</category>
+        <category>Note</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>怎么找到一个想要的开源项目</title>
     <url>/2024/02/17/howToFindAOpensourceProject/</url>
     <content><![CDATA[<p>本篇文章主要记录本人查找相关开源项目的经验，鉴于本人水平有限，仍在进步中，后续会对本文内容进行进一步的修改与更新。</p>
@@ -87,93 +174,6 @@
       <tags>
         <tag>Github</tag>
         <tag>tip</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统笔记1——操作系统结构</title>
-    <url>/2024/06/21/note1/</url>
-    <content><![CDATA[<h1 id="操作系统笔记1——操作系统结构"><a href="#操作系统笔记1——操作系统结构" class="headerlink" title="操作系统笔记1——操作系统结构"></a>操作系统笔记1——操作系统结构</h1><h2 id="1-操作系统的定义"><a href="#1-操作系统的定义" class="headerlink" title="1. 操作系统的定义"></a>1. 操作系统的定义</h2><p>什么是OS？从操作系统扮演的角色来看，它是一个处于APP和硬件之间的软件系统，扮演了一个中间人的角色。</p>
-<p>从<strong>用户</strong>的角度来看，操作系统是一个控制程序，为用户提供一个<strong>方便</strong>且<strong>高效</strong>的操作环境。</p>
-<p>从<strong>硬件</strong>的角度来看，操作系统是一个资源管理器，它管理着计算机的硬件资源。</p>
-<h2 id="2-计算机系统的组成"><a href="#2-计算机系统的组成" class="headerlink" title="2. 计算机系统的组成"></a>2. 计算机系统的组成</h2><p>在硬盘上有一个 <code>boot sector</code>，当计算机启动时，BIOS会将这个 <code>boot sector</code> 加载到内存中。这个 <code>boot sector</code> 里面有一个MBR（Master Boot Record），MBR 里面有一个引导程序，这个引导程序会加载操作系统的内核。</p>
-<p>而在操作系统启动后，会等待 <strong>随机事件(Random Event)</strong> 的发生，当随机事件发生时，操作系统会调用相应的<strong>中断</strong>处理程序。这些随机事件包括：时钟中断、硬件中断、软件中断等。</p>
-<p><strong>存储系统</strong>，包括易失性的内存和非易失性的硬盘。<br>操作系统还包括<strong>I&#x2F;O设备的管理</strong>，包括键盘、鼠标、显示器、打印机等。</p>
-<h2 id="3-计算机系统的体系结构"><a href="#3-计算机系统的体系结构" class="headerlink" title="3. 计算机系统的体系结构"></a>3. 计算机系统的体系结构</h2><ol>
-<li>单核系统</li>
-<li>多核系统</li>
-<li>分布式系统<ol>
-<li>LAN</li>
-<li>WAN</li>
-<li>SAN(Storage Area Network)</li>
-</ol>
-</li>
-</ol>
-<h2 id="4-操作系统的结构"><a href="#4-操作系统的结构" class="headerlink" title="4. 操作系统的结构"></a>4. 操作系统的结构</h2><ol>
-<li>多道程序设计</li>
-<li>分时系统</li>
-</ol>
-<p>CPU调度-&gt;交换-&gt;虚拟内存-&gt;硬盘</p>
-<p>文件-&gt;同步&#x2F;异步（&#x3D;随机）-&gt;死锁</p>
-<h2 id="5-操作系统的服务"><a href="#5-操作系统的服务" class="headerlink" title="5. 操作系统的服务"></a>5. 操作系统的服务</h2><ul>
-<li>用户和应用程序</li>
-<li>User Interface<br>  GUI&#x2F;Batch&#x2F;Shell(Command Line Interface)</li>
-<li>系统调用(System Call)</li>
-<li>内核服务(Kernel Service)<br>  程序执行&#x2F;I&#x2F;O操作&#x2F;文件系统&#x2F;进程管理&#x2F;内存管理&#x2F;网络管理&#x2F;进程通信&#x2F;资源分配&#x2F;错误检测&#x2F;保护和安全</li>
-<li>硬件设备</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">User -&gt; GUIAndBatchAndShell: User Interface</span><br><span class="line">GUIAndBatchAndShell -&gt; SystemCall: System Call</span><br><span class="line">SystemCall -&gt; KernelService: Kernel Service</span><br><span class="line">KernelService -&gt; Hardware: Hardware</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-1-User-Interface"><a href="#5-1-User-Interface" class="headerlink" title="5.1 User Interface"></a>5.1 User Interface</h3><p>几乎所有的操作系统都有一个用户接口(UI)，用户通过UI与操作系统进行交互。</p>
-<ul>
-<li>GUI</li>
-<li>Batch<br>  支持批处理作业，由原来的顺序执行，到可以有条件执行、循环执行、并行执行等。</li>
-<li>Shell&#x2F;CLI</li>
-</ul>
-<h3 id="5-2-System-Call"><a href="#5-2-System-Call" class="headerlink" title="5.2 System Call"></a>5.2 System Call</h3><p><strong>系统调用</strong>提供了访问和使用操作系统所提供的服务的接口。它的实现代码是操作系统级的，这个接口通常面向程序员。</p>
-<p>而**API(Application Programming Interface)**是面向应用程序的，它是由系统调用构建的。一般而言，API是指明了函数的参数和返回值的一组函数。开发人员往往通过API间接的调用系统调用。</p>
-<h4 id="双重模式"><a href="#双重模式" class="headerlink" title="双重模式"></a>双重模式</h4><p>现代计算机系统有一个特殊硬件用来划分系统的运行状态，至少有两种运行状态：</p>
-<ul>
-<li><strong>用户态(User Mode)</strong>:执行用户代码</li>
-<li><strong>内核态(Kernel Mode)</strong>:执行操作系统代码</li>
-</ul>
-<p>目的是确保操作系统的正确执行。</p>
-<p>实现方式：用一个硬件模式位来区分用户态和内核态，当硬件检测到一个特殊的指令时，会切换到内核态。0表示内核态，1表示用户态。</p>
-<h4 id="运行模式的切换"><a href="#运行模式的切换" class="headerlink" title="运行模式的切换"></a>运行模式的切换</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">User -&gt; SystemCall: System Call</span><br><span class="line">SystemCall -&gt; Kernel: Kernel Mode</span><br><span class="line">Kernel -&gt; User: User Mode</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">App</span><br><span class="line">----&gt;---&gt;System Call    </span><br><span class="line">          |             ^</span><br><span class="line">          |Trap         |Return</span><br><span class="line">          v             |</span><br><span class="line">       Kernel----&gt;System Code</span><br></pre></td></tr></table></figure>
-
-<p>从用户态切换到内核态也叫做<strong>陷入</strong>，从内核态切换到用户态也叫做<strong>返回</strong>。</p>
-<h4 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h4><ul>
-<li>每个系统调用都有一个唯一的编号，这个编号被传递给操作系统，操作系统根据这个编号来调用相应的服务。这个编号也被称为<strong>系统调用号</strong>。</li>
-<li>用户代码调用API时，会像系统调用接口指明系统调用号，然后操作系统会根据这个号去索引表中检索系统调用代码在内核中的位置。——类似中断向量表。</li>
-</ul>
-<h2 id="6-操作系统的构建方式"><a href="#6-操作系统的构建方式" class="headerlink" title="6. 操作系统的构建方式"></a>6. 操作系统的构建方式</h2><h3 id="操作系统的设计思路"><a href="#操作系统的设计思路" class="headerlink" title="操作系统的设计思路"></a>操作系统的设计思路</h3><ul>
-<li>设计目标<ul>
-<li>用户目标</li>
-<li>系统目标</li>
-</ul>
-</li>
-<li>机制与策略<ul>
-<li>机制：如何做</li>
-<li>策略：做什么</li>
-<li>微内核操作系统</li>
-<li>联想到策略模式</li>
-</ul>
-</li>
-</ul>
-<h2 id="7-GNU-Linux系统的结构"><a href="#7-GNU-Linux系统的结构" class="headerlink" title="7. GNU&#x2F;Linux系统的结构"></a>7. GNU&#x2F;Linux系统的结构</h2><h3 id="开源操作系统"><a href="#开源操作系统" class="headerlink" title="开源操作系统"></a>开源操作系统</h3><p>开源、闭源、混合式(hybrid)</p>
-<p>源代码与二进制代码</p>
-<p><img src="/images/note1-1719040438862.png" alt="图 1">  </p>
-<blockquote>
-<p>GNU -&gt; GNU is Not Unix</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>OS</category>
-        <category>Note</category>
-      </categories>
-      <tags>
-        <tag>OS</tag>
       </tags>
   </entry>
   <entry>
