@@ -1,0 +1,937 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>操作系统笔记2——进程 | Leeee's Blog</title><meta name="author" content="Lee"><meta name="copyright" content="Lee"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="操作系统笔记2——进程1. 进程的概念1.1 进程的定义程序和进程 程序是一个 passive entity，它是一个静态的概念，是一个文件，是一个指令序列（也被称为可执行文件）。 在一个可执行文件被加载到内存中并被操作系统执行时，这个程序就变成了一个进程，是一个 active entity。 对于一个进程（process），会有一个对应的程序计数器（PC）来指示下一条要执行的指令。  Progr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统笔记2——进程">
+<meta property="og:url" content="https://lazybearlee.github.io/2024/06/22/note2-1/index.html">
+<meta property="og:site_name" content="Leeee&#39;s Blog">
+<meta property="og:description" content="操作系统笔记2——进程1. 进程的概念1.1 进程的定义程序和进程 程序是一个 passive entity，它是一个静态的概念，是一个文件，是一个指令序列（也被称为可执行文件）。 在一个可执行文件被加载到内存中并被操作系统执行时，这个程序就变成了一个进程，是一个 active entity。 对于一个进程（process），会有一个对应的程序计数器（PC）来指示下一条要执行的指令。  Progr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lazybearlee.github.io/img/header.jpeg">
+<meta property="article:published_time" content="2024-06-22T07:24:35.000Z">
+<meta property="article:modified_time" content="2024-06-24T08:46:02.064Z">
+<meta property="article:author" content="Lee">
+<meta property="article:tag" content="OS">
+<meta property="article:tag" content="进程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lazybearlee.github.io/img/header.jpeg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://lazybearlee.github.io/2024/06/22/note2-1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '操作系统笔记2——进程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-24 16:46:02'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/header.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Leeee's Blog"><span class="site-name">Leeee's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">操作系统笔记2——进程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-22T07:24:35.000Z" title="发表于 2024-06-22 15:24:35">2024-06-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-24T08:46:02.064Z" title="更新于 2024-06-24 16:46:02">2024-06-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OS/">OS</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OS/Note/">Note</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="操作系统笔记2——进程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="操作系统笔记2——进程"><a href="#操作系统笔记2——进程" class="headerlink" title="操作系统笔记2——进程"></a>操作系统笔记2——进程</h1><h2 id="1-进程的概念"><a href="#1-进程的概念" class="headerlink" title="1. 进程的概念"></a>1. 进程的概念</h2><h3 id="1-1-进程的定义"><a href="#1-1-进程的定义" class="headerlink" title="1.1 进程的定义"></a>1.1 进程的定义</h3><h4 id="程序和进程"><a href="#程序和进程" class="headerlink" title="程序和进程"></a>程序和进程</h4><ul>
+<li>程序是一个 <strong>passive entity</strong>，它是一个静态的概念，是一个文件，是一个指令序列（也被称为可执行文件）。</li>
+<li>在一个可执行文件被加载到内存中并被操作系统执行时，这个程序就变成了一个进程，是一个 <strong>active entity</strong>。</li>
+<li>对于一个进程（process），会有一个对应的程序计数器（PC）来指示下一条要执行的指令。</li>
+</ul>
+<h5 id="Program-Counter"><a href="#Program-Counter" class="headerlink" title="Program Counter"></a>Program Counter</h5><ul>
+<li>程序计数器（PC）是一个在CPU中的寄存器，它存储着下一条要执行的指令的地址。有时候也被称为指令计数器（IC）、指令指针（IP）、指令地址寄存器（IAR）等。</li>
+<li>通常，CPU在取完一条指令后，会将PC的值加上这条指令的长度或是1，以便指向下一条指令的地址。</li>
+</ul>
+<h4 id="Process-In-Memory"><a href="#Process-In-Memory" class="headerlink" title="Process In Memory"></a>Process In Memory</h4><ul>
+<li>在内存中，一个进程会被分为多个部分，包括：<ul>
+<li>Text Section：存放着程序的指令。</li>
+<li>Data Section：存放着程序的全局变量和静态变量。</li>
+<li>Stack Section：存放着程序的局部变量和函数返回地址。</li>
+<li>Heap Section：存放着程序运行时动态分配的内存。</li>
+</ul>
+</li>
+<li>对于栈和堆，堆是从低地址向高地址增长的，而栈是从高地址向低地址增长的。</li>
+</ul>
+<h4 id="并发的进程"><a href="#并发的进程" class="headerlink" title="并发的进程"></a>并发的进程</h4><ul>
+<li>Concurrency：同一个时间内两个或多个事件或活动发生或存在。</li>
+<li>并行：同一时间，两个或多个事件或活动同时运行。</li>
+</ul>
+<p>产生的原因主要还是资源的有限性，比如CPU、内存、I&#x2F;O设备等。</p>
+<h4 id="进程的切换"><a href="#进程的切换" class="headerlink" title="进程的切换"></a>进程的切换</h4><ul>
+<li>并发进程无法一次性执行完毕，一个进程可能在执行过程中被中断，然后切换到另一个进程来替换占有CPU。</li>
+</ul>
+<h4 id="进程的定义"><a href="#进程的定义" class="headerlink" title="进程的定义"></a>进程的定义</h4><ul>
+<li>进程是一个程序的一次执行过程，能完成具体的功能，是在某个数据集合上完成的，执行过程是可并发的。</li>
+<li>进程是<strong>资源分配、保护和调度</strong>的基本单位。（前提是没有引入线程的概念）</li>
+</ul>
+<h4 id="作业与进程"><a href="#作业与进程" class="headerlink" title="作业与进程"></a>作业与进程</h4><ul>
+<li>作业（Job）：是一个用户提交的任务，是一个静态的概念，是用户对计算机的一次独立的使用过程。</li>
+<li>进程（Process）：是分配计算机资源的单位，是用户任务运行的实体，**作业可包含多个进程(至少一个)**。</li>
+</ul>
+<p><strong>批处理系统作业与进程关系</strong>：作业调度程序每选择一道作业运行时，首先为该作业创建一个根进程，该进程执行作业控制语言解释器程序，在解释执行作业步时可根据需要创建多个子进程。 </p>
+<h3 id="1-2-进程的状态"><a href="#1-2-进程的状态" class="headerlink" title="1.2 进程的状态"></a>1.2 进程的状态</h3><p>三种基本状态：</p>
+<ul>
+<li>运行态（Running）：进程正在CPU上执行。</li>
+<li>就绪态（Ready）：进程已经准备好，等待CPU。</li>
+<li>阻塞态（Blocked）：进程正在等待某个事件的发生。也被称为等待态（Waiting）。</li>
+</ul>
+<h4 id="进程何时离开CPU"><a href="#进程何时离开CPU" class="headerlink" title="进程何时离开CPU"></a>进程何时离开CPU</h4><ul>
+<li>内部事件<ul>
+<li>进程主动放弃CPU（yield），比如调用 <code>sleep()</code> 函数。</li>
+<li>使用I&#x2F;O设备，比如读写文件，为非正常结束。</li>
+</ul>
+</li>
+<li>外部事件<ul>
+<li>进程被剥夺CPU使用权，进入就绪态。这个动作叫做抢占（Preemption）。</li>
+<li>时间片到达，高优先级进程抢占CPU。</li>
+</ul>
+</li>
+</ul>
+<h4 id="进程状态的转换"><a href="#进程状态的转换" class="headerlink" title="进程状态的转换"></a>进程状态的转换</h4><ul>
+<li><strong>创建（Create）</strong>：进程正在被创建。<ul>
+<li>是操作系统为进程创建进程控制块（PCB）和分配地址空间的过程。</li>
+<li>完成以下工作：<ul>
+<li>为进程分配唯一的进程标识符（PID）。</li>
+<li>为进程分配地址空间和其他资源。</li>
+<li>初始化进程控制块。</li>
+<li>初始化进程的状态为就绪态，加入就绪队列。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>就绪（Ready）</strong>：进程已经准备好，等待CPU。</li>
+<li><strong>运行（Running）</strong>：进程正在CPU上执行。</li>
+<li><strong>阻塞（Blocked）</strong>：进程正在等待某个事件的发生。</li>
+<li><strong>结束（Terminate）</strong>：进程已经结束。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>状态转换</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ready -&gt; Running</td>
+<td>CPU调度程序选择该进程占用CPU</td>
+</tr>
+<tr>
+<td>Running -&gt; Ready</td>
+<td>时间片用完或在中断机制下，有更高优先级的进程需要CPU，该进程进入就绪队列等待下一次被选中而占用CPU</td>
+</tr>
+<tr>
+<td>Running -&gt; Blocked</td>
+<td>进程出让CPU，等待系统分配资源或等待某个事件的发生，如暂时不能访问某一资源、操作系统尚未完成服务、等待用户输入等</td>
+</tr>
+<tr>
+<td>Blocked -&gt; Ready</td>
+<td>等待的事件发生或资源可用，进程进入就绪队列等待CPU</td>
+</tr>
+</tbody></table>
+<p>其他可能的状态转换：</p>
+<ul>
+<li><strong>空-&gt;Create</strong>：进程被创建。</li>
+<li><strong>Create-&gt;Ready</strong>：进程创建完毕，进入就绪态。</li>
+<li><strong>Running-&gt;Terminate</strong>：进程执行完毕，结束。</li>
+</ul>
+<h5 id="进程挂起"><a href="#进程挂起" class="headerlink" title="进程挂起"></a>进程挂起</h5><ul>
+<li>进程挂起（Suspend）：是指将一个进程从内存中移动到外存中，以释放内存资源。这意味着进程没有再占用内存资源，其进程映像在磁盘上。</li>
+</ul>
+<p><img src="/image/note2-1719052818993.png" alt="图 2">  </p>
+<h4 id="进程状态的转换图"><a href="#进程状态的转换图" class="headerlink" title="进程状态的转换图"></a>进程状态的转换图</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">[*] --&gt; Create</span><br><span class="line">Create --&gt; Ready</span><br><span class="line">Ready --&gt; Running</span><br><span class="line">Running --&gt; Ready</span><br><span class="line">Running --&gt; Blocked</span><br><span class="line">Blocked --&gt; Ready</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p><strong>七态模型：</strong></p>
+<p><img src="/image/note2-1719053752452.png" alt="图 5">  </p>
+<h4 id="进程的创建与结束"><a href="#进程的创建与结束" class="headerlink" title="进程的创建与结束"></a>进程的创建与结束</h4><ul>
+<li><p>进程的创建</p>
+<ul>
+<li>接收进程运行所需参数：如初始优先级，执行程序描述及输入参数，其它资源等参数。</li>
+<li>请求分配进程描述块PCB空间，得到一个内部数字进程标识。<br>用传来的参数初始化PCB表。</li>
+<li>产生用于描述进程空间的数据结构，用初始执行文件初始化进程空间，建立程序段，数据段、用户栈段等。</li>
+<li>用进程运行输入参数等设置处理机现场保护区，造一个进程运行栈帧。</li>
+<li>置好父进程等关系域。</li>
+<li>将进程置成就绪状态。</li>
+<li>将PCB表挂入就绪队列，等待时机被调度运行。</li>
+</ul>
+</li>
+<li><p>进程的结束</p>
+<ul>
+<li>将进程状态改到结束状态；</li>
+<li>关闭所有打开文件、设备；</li>
+<li>释放进程程序文件和其他资源；</li>
+<li>进行相关信息统计；</li>
+<li>清理其相关进程的链接关系，如在Linux中，将该结束进程的所有- 子进程链到1号进程，作为1号进程的子进程，并通知父进程自己已结束；</li>
+<li>释放进程映像空间；</li>
+<li>释放进程控制块(PCB)；</li>
+<li>调进程调度与切换程序。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-进程的描述"><a href="#3-进程的描述" class="headerlink" title="3. 进程的描述"></a>3. 进程的描述</h2><h3 id="3-1-进程的组成"><a href="#3-1-进程的组成" class="headerlink" title="3.1 进程的组成"></a>3.1 进程的组成</h3><p>进程由以下四个部分组成：</p>
+<ul>
+<li><strong>程序段</strong>：存放着程序的指令。</li>
+<li><strong>数据段</strong>：存放着进程执行时所使用的数据，包括用户输入的数据、程序中的常量等。</li>
+<li><strong>工作区</strong>：存放着进程执行时所使用的临时数据，比如函数调用时的参数、返回地址等。</li>
+<li><strong>进程控制块</strong>（PCB）：存放着进程的描述信息，包括进程的标识符、状态、优先级、程序计数器、寄存器等。<strong>PCB是进程存在的唯一标志。</strong></li>
+</ul>
+<p>在上面的四个部分中，程序与数据是实体，工作区是临时的，PCB是进程的描述信息。</p>
+<h3 id="3-2-进程控制块（PCB）"><a href="#3-2-进程控制块（PCB）" class="headerlink" title="3.2 进程控制块（PCB）"></a>3.2 进程控制块（PCB）</h3><ul>
+<li>定义：是操作系统用来记录进程的详细状态和相关信息的基本数据结构，与进程一一对应。</li>
+<li>作用：提高进程的各种信息，以便操作系统能够对进程进行管理和控制。</li>
+</ul>
+<h4 id="PCB的结构"><a href="#PCB的结构" class="headerlink" title="PCB的结构"></a>PCB的结构</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>内容</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标识信息</td>
+<td>1. 进程标识符<br>2. 父进程标识符<br>3. 用户标识符</td>
+<td>1. 区分进程<br>2. 父子关系<br>3. 用户标识</td>
+</tr>
+<tr>
+<td>现场信息</td>
+<td>1. CPU通用寄存器内容<br>2. CPU控制和状态寄存器内容<br>3. 堆栈指针</td>
+<td>记录处理机现场信息，以备恢复之用</td>
+</tr>
+<tr>
+<td>控制信息</td>
+<td>1. 进程状态<br>2. 调度信息<br>3. 队列指针<br>4. 位置信息<br>5. 资源占用信息</td>
+<td>用于进程的调度管理</td>
+</tr>
+</tbody></table>
+<p>PCB中含有三大类信息描述：</p>
+<ol>
+<li><strong>进程标识信息</strong>：包括进程标识符、父进程标识符、用户标识符等。</li>
+<li><strong>处理机状态信息保存区</strong>。</li>
+<li><strong>进程控制信息</strong><ul>
+<li>调度和状态信息，用于操作系统调度进程占用处理机。</li>
+<li>进程间通讯信息，为支持进程间的通讯相关的各种标识，信号，信件等，这些信息存在接收方的进程控制块中。</li>
+<li>存储管理信息。包含有指向本进程映像存储空间的数据结构。</li>
+<li>进程所用资源。说明由进程打开，使用的系统资源，如打开的文件等。</li>
+<li>有关数据结构链接信息，进程可以链接到一个进程队列中，或链接到相关的其它进程PCB。</li>
+</ul>
+</li>
+</ol>
+<p><img src="/image/note2-1719053633194.png" alt="图 3">  </p>
+<h4 id="PCB的管理"><a href="#PCB的管理" class="headerlink" title="PCB的管理"></a>PCB的管理</h4><p>操作系统对PCB的管理采用集中统一管理。</p>
+<p><img src="/image/note2-1719053704288.png" alt="图 4">  </p>
+<h2 id="4-进程的组织"><a href="#4-进程的组织" class="headerlink" title="4. 进程的组织"></a>4. 进程的组织</h2><ul>
+<li>线性表组织方式：把所有进程的PCB存放在一个<strong>数组</strong>中，系统通过数组下标访问每个PCB。</li>
+<li>链表组织方式：把所有具有相同状态的进程的PCB存放在一个<strong>链表</strong>中，组成一个队列。<ul>
+<li>处于就绪态的进程可以按照某种策略排成多个队列。</li>
+<li>处于阻塞态的进程可以根据阻塞原因排成多个队列。</li>
+</ul>
+</li>
+</ul>
+<p>在下面的图中，当接收进程进入系统，系统会将其分配到对应的就绪队列，然后处理机从某个就绪队列中选择一个进程运行直到进程终止或因为时间片到移动到就绪队列。而在此过程中，可能发生进程的堵塞，此时进程会被移动到对应的阻塞队列中，等待事件发生后再次移动到就绪队列。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line"></span><br><span class="line">title 进程调度图</span><br><span class="line"></span><br><span class="line">actor 接收进程 as ReceivingProcess</span><br><span class="line"></span><br><span class="line">rectangle &quot;系统&quot; &#123;</span><br><span class="line">    rectangle &quot;就绪队列&quot; as ReadyQueue &#123;</span><br><span class="line">        node ReadyQueue1</span><br><span class="line">        node ReadyQueue2</span><br><span class="line">        node ReadyQueueN</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    rectangle &quot;阻塞队列&quot; as BlockedQueue &#123;</span><br><span class="line">        node BlockedQueue1</span><br><span class="line">        node BlockedQueue2</span><br><span class="line">        node BlockedQueueN</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    node Processor &#123;</span><br><span class="line">        node &quot;处理机&quot; as ProcessorState</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ReceivingProcess -&gt; ProcessorState : 进入系统</span><br><span class="line">ProcessorState --&gt; ReadyQueue : 分配到对应的就绪队列</span><br><span class="line">ReadyQueue1 --&gt; ProcessorState : 处理机选择进程运行</span><br><span class="line">ProcessorState -&gt; ReadyQueue1 : 时间片到，回到就绪队列</span><br><span class="line">ProcessorState --&gt; ReadyQueue1 : 进程终止</span><br><span class="line"></span><br><span class="line">ProcessorState -&gt; BlockedQueue : 进程阻塞</span><br><span class="line">BlockedQueue1 -&gt; ReadyQueue1 : 事件发生，回到就绪队列</span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>系统也专门设置了一个指针指向<strong>当前正在运行的进程</strong>，以便于操作系统能够快速找到当前正在运行的进程。如UNIX系统的<code>CURPRO</code>指针。</p>
+<ul>
+<li>索引方式：系统根据进程的状态建立几张索引表，并将索引表在内存的首地址记录于内存中一些专用单元。</li>
+</ul>
+<h2 id="5-进程的控制"><a href="#5-进程的控制" class="headerlink" title="5. 进程的控制"></a>5. 进程的控制</h2><h3 id="中断技术"><a href="#中断技术" class="headerlink" title="中断技术"></a>中断技术</h3><p><strong>中断是指：</strong></p>
+<ul>
+<li>当发生某个事件时，CPU暂停正在执行的程序</li>
+<li>引出该事件的处理程序执行</li>
+<li>处理完毕后，返回源程序中断点继续执行</li>
+</ul>
+<p>与 <strong>Trap</strong> 机制很像，我们可以认为系统调用就是中断的一个特例。</p>
+<p><strong>中断也分为：</strong></p>
+<ul>
+<li>Exception：由CPU内部产生的中断，如除零、溢出等。</li>
+<li>Interrupt：由外部设备产生的中断，如I&#x2F;O设备的中断。</li>
+</ul>
+<h4 id="中断源"><a href="#中断源" class="headerlink" title="中断源"></a>中断源</h4><ul>
+<li><strong>外部中断</strong>：来自处理器之外的硬件中断信号，如时钟中断、I&#x2F;O中断等。这些中断均是 <strong>异步中断</strong> ——随机。</li>
+<li><strong>内部中断</strong>（Exception）：来自处理器内部的中断信号。这些中断均是 <strong>同步中断</strong> 。<ul>
+<li>硬件异常：掉电、奇偶校验错误等。</li>
+<li>程序异常：除零、溢出等。</li>
+<li>系统调用：用户程序请求操作系统服务。</li>
+</ul>
+</li>
+</ul>
+<h4 id="中断处理过程"><a href="#中断处理过程" class="headerlink" title="中断处理过程"></a>中断处理过程</h4><ul>
+<li><strong>context</strong>： 上下文信息，包括程序计数器、寄存器等。</li>
+</ul>
+<ol>
+<li><p><strong>保护现场</strong>：将当前程序的上下文信息保存到内存中。</p>
+</li>
+<li><p><strong>中断处理</strong>：根据中断类型，执行相应的中断处理程序。</p>
+<ul>
+<li>确定中断源</li>
+<li>处理中断</li>
+</ul>
+</li>
+<li><p><strong>恢复现场</strong>；</p>
+<ul>
+<li>选择一个进程来restore（恢复）和resume（继续）。</li>
+<li>从内存中恢复上下文信息。</li>
+<li>继续执行。</li>
+</ul>
+</li>
+</ol>
+<h3 id="特权指令与非特权指令"><a href="#特权指令与非特权指令" class="headerlink" title="特权指令与非特权指令"></a>特权指令与非特权指令</h3><ul>
+<li><strong>特权指令</strong>：只能在内核态下执行的指令。<ul>
+<li>I&#x2F;O 指令和停机（Halt）指令。</li>
+<li>关闭中断指令。</li>
+<li>设置Timer（定时器）指令。</li>
+<li>进程切换</li>
+</ul>
+</li>
+<li><strong>非特权指令</strong>：只能在用户态下执行的指令。</li>
+</ul>
+<h3 id="模式切换"><a href="#模式切换" class="headerlink" title="模式切换"></a>模式切换</h3><ul>
+<li>中断是用户态向核心态转换的<strong>唯一途径</strong>。系统调用实质上也是一种中断。</li>
+<li>OS提供<code>Load PSW</code>指令，用于装载用户进程，返回用户态。</li>
+</ul>
+<h3 id="进程的控制"><a href="#进程的控制" class="headerlink" title="进程的控制"></a>进程的控制</h3><ul>
+<li>进程的控制是指系统使用一些具有特定功能的程序段来创建、撤销进程以及完成进程各个状态之间的转换。</li>
+<li>以上过程由操作系统内核完成，用户程序不能直接控制进程。同时，也是原语一级的操作，不可被打断。</li>
+</ul>
+<h3 id="原语（Primitive）"><a href="#原语（Primitive）" class="headerlink" title="原语（Primitive）"></a>原语（Primitive）</h3><ul>
+<li>由若干条机器指令构成的完成特定功能的程序段。原语作为一个整体，要么全部执行，要么全部不执行。原语主要是通过屏蔽中断来保证其执行的完整性（原子性）。</li>
+<li>分类：<ul>
+<li><strong>进程控制原语</strong>：创建、撤销等。</li>
+<li><strong>进程通信原语</strong>：发送、接收等。</li>
+<li><strong>进程管理原语</strong>：挂起、唤醒等。</li>
+<li><strong>其他方面的原语</strong></li>
+</ul>
+</li>
+</ul>
+<h4 id="创建原语"><a href="#创建原语" class="headerlink" title="创建原语"></a>创建原语</h4><p>引起创建进程的事件：</p>
+<ul>
+<li>系统初始化</li>
+<li>用户登陆</li>
+<li>作业调度</li>
+<li>提供服务</li>
+<li>应用请求</li>
+</ul>
+<p>在创建进程时，创建原语会做以下工作：</p>
+<ul>
+<li>申请空白PCB</li>
+<li>为新进程分配资源（程序、数据、工作区——用户栈分配）</li>
+<li>初始化PCB，将调用者参数（进程名、进程优先级、实体所在主存起始位置、所需资源清单以及进程家族关系等）填入PCB</li>
+<li>将新进程插入就绪队列</li>
+</ul>
+<p>在UNIX系统中，创建进程的系统调用是<code>fork()</code>。而Windows系统中，创建进程的系统调用是<code>CreateProcess()</code>。</p>
+<p><img src="/image/note2-1719058851071.png" alt="图 6">  </p>
+<p>以下是一段C语言代码，用于创建一个新的进程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;</span><br><span class="line">    pid = fork();</span><br><span class="line">    <span class="comment">// fork()函数会返回两次，一次是在父进程中，一次是在子进程中</span></span><br><span class="line">    <span class="comment">// 在父进程中，pid会返回子进程的PID，而在子进程中，pid会返回0</span></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Fork Failed&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, <span class="string">&quot;This is child process!&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;This is parent process!&quot;</span>);</span><br><span class="line">        wait(<span class="literal">NULL</span>);<span class="comment">//等待子进程结束,wait函数会将子进程的退出状态传递给父进程</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="撤销原语"><a href="#撤销原语" class="headerlink" title="撤销原语"></a>撤销原语</h4><p>引起撤销进程的事件：</p>
+<ul>
+<li>进程正常结束——任务完成、用户退出</li>
+<li>进程异常结束——运行错误、资源不足、I&#x2F;O异常</li>
+<li>外界干预——死锁情况下，系统强制撤销；父进程终止</li>
+</ul>
+<p>在撤销进程时，撤销原语会做以下工作：</p>
+<ul>
+<li>根据被终止进程的标识符（PID）从PCB集合中找到对应的PCB，读出进程的状态。</li>
+<li>如果被终止进程处于运行态，立即停止该进程的执行，并置调度标志为真，用于指示该进程被终止后应重新进行调度。</li>
+<li>如果该进程还有子孙进程，将其所有子孙进程也一并终止，以防子孙进程成为不可控进程。</li>
+<li>释放该进程占用的资源，包括内存、文件、I&#x2F;O设备等。被释放的资源会归还给父进程或系统。</li>
+<li>将该进程的PCB从所在队列中删除，等待其他程序来搜集信息。</li>
+</ul>
+<p>在UNIX系统中，撤销进程的系统调用是<code>exit()</code>。子进程调用<code>exit()</code>后，处于<code>zombie</code>状态，进程管理器在父进程被告知子进程结束前，会一直保留子进程的PCB。在父进程执行<code>wait()</code>后，子进程的PCB会被释放。Windows则用<code>ExitProcess()</code>。</p>
+<h4 id="阻塞原语"><a href="#阻塞原语" class="headerlink" title="阻塞原语"></a>阻塞原语</h4><p>引起阻塞进程的事件：</p>
+<ul>
+<li>请求系统服务</li>
+<li>启动某种操作——I&#x2F;O处理完成</li>
+<li>新数据未到达——等待其他进程发送信息</li>
+</ul>
+<p>在阻塞进程时，阻塞原语会做以下工作：</p>
+<ul>
+<li>进程通过调用阻塞原语把自己阻塞，由运行态转变为阻塞态。</li>
+<li>中断CPU，将其运行现场保存到PCB中。</li>
+<li>置状态为阻塞态，将PCB插入阻塞队列。</li>
+<li>转进程调度程序，选择另一个进程运行。</li>
+</ul>
+<h4 id="唤醒原语"><a href="#唤醒原语" class="headerlink" title="唤醒原语"></a>唤醒原语</h4><p>引起唤醒进程的事件：</p>
+<ul>
+<li>等待的事件发生——在中断处理程序中，将进程从阻塞队列中移动到就绪队列。</li>
+<li>等待某进程发信息——由发送进程发出唤醒信号，使被阻塞进程转为就绪态</li>
+</ul>
+<p>UNIX 阻塞&#x2F;唤醒：</p>
+<ul>
+<li>阻塞：<code>pause()</code>，<code>sleep()</code>，<code>wait()</code>，分别等待信号、等待时间、等待子进程结束。</li>
+<li>唤醒：<code>kill()</code>，<code>Wakeup()</code>，分别发送信号、唤醒进程。</li>
+</ul>
+<h4 id="挂起原语"><a href="#挂起原语" class="headerlink" title="挂起原语"></a>挂起原语</h4><p>对于不同的操作系统，挂起原语的实现方式不同。</p>
+<ul>
+<li>实时系统中，根据实时现场需要，会将正在执行或没有执行的进程挂起。被挂起的进程由活动状态变为<strong>静止状态</strong>，若<br>被挂起的进程正在执行，则转向调度程序重新调度。 </li>
+<li>分时系统中，把进程从内存中移动到外存中，以释放内存资源，进程于是处于静止状态。</li>
+</ul>
+<h4 id="解挂原语"><a href="#解挂原语" class="headerlink" title="解挂原语"></a>解挂原语</h4><p>当挂起进程的原因被解除时，系统调用解挂<strong>原语</strong>将<strong>指定的进程解</strong>挂，使其由<strong>静止状态</strong>变为<strong>活动状态</strong>。<br>当被解挂的进程变为<strong>活动就绪</strong>时，通常立即转进程调度。</p>
+<h3 id="进程执行"><a href="#进程执行" class="headerlink" title="进程执行"></a>进程执行</h3><ul>
+<li><strong>系统模型</strong>：内核程序嵌入进程运行。</li>
+<li><strong>执行模式（态）</strong>：进程可在用户态和核心态下运行。</li>
+<li><strong>进程模式切换</strong>：一个进程既运行用户态程序，在系统调用和中断转换到核心态时运行操作系统核心程序。</li>
+<li><strong>进程切换</strong>：指进程进入操作系统核心后因为自身等事件或有更迫切需要运行的进程就绪而让出处理机，处理机转去运行其它进程。</li>
+</ul>
+<h2 id="6-进程的调度"><a href="#6-进程的调度" class="headerlink" title="6. 进程的调度"></a>6. 进程的调度</h2><p><img src="/image/note2-1719059908315.png" alt="图 7">  </p>
+<h3 id="进程切换过程"><a href="#进程切换过程" class="headerlink" title="进程切换过程"></a>进程切换过程</h3><h4 id="PlantUML-绘图"><a href="#PlantUML-绘图" class="headerlink" title="PlantUML 绘图"></a>PlantUML 绘图</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line">title 进程切换过程</span><br><span class="line"></span><br><span class="line">start</span><br><span class="line">:保存处理机的上下文;</span><br><span class="line">note right: 包括程序计数器PC、处理机状态字PS、其它寄存器</span><br><span class="line">:修改当前运行进程的进程控制块内容;</span><br><span class="line">note right: 将进程状态从运行态改成其它状态</span><br><span class="line">:选择另一个进程执行;</span><br><span class="line">note right: 按照调度算法</span><br><span class="line">:修改被调度进程的进程控制块;</span><br><span class="line">note right: 将其状态改变到运行态</span><br><span class="line">:修改存储管理数据结构;</span><br><span class="line">note right: 修改进程内存起始地址</span><br><span class="line">:恢复被选进程上次切换出处理机时的处理机现场;</span><br><span class="line">note right: 按原保护的程序计数器值重置程序计数器，运行新选进程</span><br><span class="line">stop</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<h4 id="实例解释"><a href="#实例解释" class="headerlink" title="实例解释"></a>实例解释</h4><h5 id="示例：从进程A切换到进程B"><a href="#示例：从进程A切换到进程B" class="headerlink" title="示例：从进程A切换到进程B"></a>示例：从进程A切换到进程B</h5><p>假设我们有两个进程A和B，它们各自有自己的虚拟地址空间。当从进程A切换到进程B时，需要更新存储管理数据结构，以确保进程B能够正确访问其内存。</p>
+<ol>
+<li><p><strong>保存处理机的上下文</strong>：</p>
+<ul>
+<li>保存进程A的程序计数器（PC）、处理机状态字（PS）、和其他寄存器。</li>
+</ul>
+</li>
+<li><p><strong>修改当前运行进程的进程控制块内容</strong>：</p>
+<ul>
+<li>更新进程A的进程控制块（PCB），将其状态从运行态改为等待态或就绪态。</li>
+</ul>
+</li>
+<li><p><strong>选择另一个进程执行</strong>：</p>
+<ul>
+<li>按照调度算法选择进程B来执行。</li>
+</ul>
+</li>
+<li><p><strong>修改被调度进程的进程控制块</strong>：</p>
+<ul>
+<li>更新进程B的进程控制块，将其状态改为运行态。</li>
+</ul>
+</li>
+<li><p><strong>修改存储管理数据结构</strong>：</p>
+<ul>
+<li>更新页表：将当前页表从进程A的页表切换到进程B的页表。页表是虚拟地址到物理地址的映射。</li>
+<li>例如：<ul>
+<li>进程A的页表可能将虚拟地址0x0000映射到物理地址0x1000。</li>
+<li>进程B的页表可能将虚拟地址0x0000映射到物理地址0x2000。</li>
+</ul>
+</li>
+<li>切换页表意味着更新处理器中的页表基址寄存器，使其指向进程B的页表。</li>
+</ul>
+</li>
+<li><p><strong>恢复被选进程上次切换出处理机时的处理机现场</strong>：</p>
+<ul>
+<li>恢复进程B的上下文，包括程序计数器、处理机状态字和其他寄存器。</li>
+<li>根据保存的程序计数器值，设置程序计数器，使处理器从上次进程B切换出去时的位置继续执行。</li>
+</ul>
+</li>
+</ol>
+<p>通过这种方式，处理器能够正确访问进程B的内存地址，确保进程B的正常运行。</p>
+<h3 id="调度的含义"><a href="#调度的含义" class="headerlink" title="调度的含义"></a>调度的含义</h3><p>特指<strong>选择进程占用处理机</strong>的过程。</p>
+<h4 id="什么是调度"><a href="#什么是调度" class="headerlink" title="什么是调度"></a>什么是调度</h4><ul>
+<li><strong>调度</strong>：是指操作系统管理了系统的有限资源，当有<strong>多个进程（或多个进程发出的请求）</strong>要使用这些资源时，因为资源的有限性，必须按照一定的原则选择进程（请求）来占用资源。这就是调度。 </li>
+<li>调度的目的：控制资源使用者的数量，选取资源使用者许可占用资源。</li>
+</ul>
+<h4 id="几个不同的调度例子"><a href="#几个不同的调度例子" class="headerlink" title="几个不同的调度例子"></a>几个不同的调度例子</h4><ul>
+<li><strong>高级调度</strong>：选取输入井中的作业（仅限于批作业调度），生成根进程，开始执行作业步。目的是控制使用系统资源的进程数。</li>
+<li><strong>中级调度</strong>：选取进程占用内存或有资格占用内存，又称进程滚入滚出。</li>
+<li><strong>低级调度</strong>：选取进程占用处理机，又称进程调度。</li>
+<li><strong>I&#x2F;O请求调度</strong>：选取进程占用I&#x2F;O设备，执行I&#x2F;O请求。</li>
+</ul>
+<h4 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h4><ul>
+<li><strong>进程调度</strong>：是指操作系统根据某种算法，从就绪队列中选择一个进程，将处理机分配给它，使其执行。目的是提高处理机的利用率，使各进程能够公平地得到处理机资源。</li>
+</ul>
+<h3 id="进程调度的功能"><a href="#进程调度的功能" class="headerlink" title="进程调度的功能"></a>进程调度的功能</h3><ol>
+<li>记录系统中各进程的执行状况。- 进程控制块</li>
+<li>选择就绪队列中的一个进程，将处理机分配给它。- 进程调度程序</li>
+<li>进行进程上下文切换。- 进程切换程序，保存和恢复进程的上下文</li>
+</ol>
+<h4 id="进程上下文"><a href="#进程上下文" class="headerlink" title="进程上下文"></a>进程上下文</h4><ol>
+<li><strong>用户级上下文</strong>：用户程序的执行环境，包括用户程序的代码、数据、堆栈等。</li>
+<li><strong>寄存器级上下文</strong>：CPU寄存器的内容，包括程序计数器、通用寄存器、状态寄存器、PSW（程序状态字）等。</li>
+<li><strong>系统级上下文</strong>：操作系统的执行环境，包括进程PCB、内核栈、内核数据结构等。</li>
+</ol>
+<p><strong>关于栈和栈帧的概念：</strong></p>
+<ul>
+<li><strong>栈</strong>：是一种数据结构，遵循先进后出（FILO）的原则。在操作系统中用于记录进程的执行历程。</li>
+<li><strong>栈帧</strong>：用于存放有关的输入参数、局部变量、返回地址等信息。</li>
+</ul>
+<p>通常，每个进程会调用不同的过程，从而有一个各自不同的执行历程。</p>
+<h3 id="进程调度方式"><a href="#进程调度方式" class="headerlink" title="进程调度方式"></a>进程调度方式</h3><ul>
+<li><strong>非剥夺式调度</strong>：进程在运行时不会被强制中断，直到进程自己放弃CPU。用于<strong>批处理系统</strong>。主要优点在于简单，系统开销小。</li>
+<li><strong>剥夺式调度</strong>：进程在运行时可能被强制中断，以便让其他进程占用CPU。用于<strong>分时系统</strong>和<strong>实时系统</strong>。主要优点在于提高系统的响应速度。</li>
+</ul>
+<p>进程调度在核心态下执行，因为进程调度需要访问进程控制块，而进程控制块是操作系统的数据结构，只有在核心态下才能访问。</p>
+<p><img src="/image/note2-1719062136501.png" alt="图 8">  </p>
+<h3 id="引起进程调度因素"><a href="#引起进程调度因素" class="headerlink" title="引起进程调度因素"></a>引起进程调度因素</h3><ol>
+<li>进程主动放弃处理机<ul>
+<li>正在执行的进程执行完毕</li>
+<li>正在执行的进程发出I&#x2F;O请求</li>
+<li>正在执行的进程发出等待信号。等待其它进程或系统发出的事件</li>
+<li>正在执行的进程暂时得不到所要的系统资源</li>
+</ul>
+</li>
+<li>为支持可剥夺的进程调度方式，有新进程就绪时——<strong>新就绪的进程可能会按某种调度原则剥夺正运行的进程，因此也应申请进行进程调度</strong><ul>
+<li>当中断处理程序处理完中断，引起新进程就绪</li>
+<li>当进程释放独占资源，引起等待该资源的进程就绪</li>
+<li>当进程发系统调用，引起某个等待事件的进程就绪</li>
+<li>其它任何原因引起有进程从其它状态变成就绪状态</li>
+</ul>
+</li>
+<li>为支持可剥夺的进程调度方式，即使没有新就绪进程，为了让所有就绪进程轮流占用处理机，也应申请进行进程调度<ul>
+<li>当<strong>时钟中断</strong>发生,时钟中断处理程序调用有关时间片的处理程序，发现正运行进程时间片到，应请求重新调度。以便让其他进程占用处理机</li>
+<li>在按<strong>优先级调度</strong>时，当有进程的优先级发生变化，应请求重新调度</li>
+</ul>
+</li>
+</ol>
+<h3 id="进程调度与切换时机"><a href="#进程调度与切换时机" class="headerlink" title="进程调度与切换时机"></a>进程调度与切换时机</h3><ul>
+<li><strong>当发生引起调度条件，且当前进程无法继续运行下去时</strong>（如发生各种进程放弃处理机的条件）可以马上进行调度与切换。</li>
+<li><strong>当中断处理结束或自陷处理结束返回被中断进程的用户态程序执行前，若请求调度标志置上</strong>，即可马上进行进程调度与切换。<strong>如果操作系统支持这种情况下运行调度程序，即实现了剥夺方式的调度</strong>。</li>
+<li>实时系统还有其他调度与切换时机。</li>
+</ul>
+<p><img src="/image/note2-1719063319664.png" alt="图 10">  </p>
+<h3 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h3><ul>
+<li>要求：高资源利用率、低系统开销、公平性、响应时间短、吞吐量大。</li>
+<li>与整个系统的设计目的相一致：<ul>
+<li><strong>批处理系统</strong>：高资源利用率、高吞吐量。</li>
+<li><strong>分时系统</strong>：响应时间短、公平性。</li>
+<li><strong>实时系统</strong>：保证任务在规定时间内完成。</li>
+</ul>
+</li>
+</ul>
+<h4 id="调度算法评价因素"><a href="#调度算法评价因素" class="headerlink" title="调度算法评价因素"></a>调度算法评价因素</h4><ol>
+<li>吞吐量：单位时间内CPU完成的作业数量。<ul>
+<li>如果在10s内完成了10个作业，那么吞吐量为1个作业&#x2F;秒。</li>
+</ul>
+</li>
+<li>CPU利用率<ul>
+<li>CPU利用率 &#x3D; CPU繁忙时间 &#x2F; （CPU繁忙时间 + CPU空闲时间）</li>
+</ul>
+</li>
+<li>周转时间：从作业提交到作业完成所经历的时间。是评价批处理系统性能的重要指标。<ul>
+<li>周转时间 &#x3D; 完成时间 - 到达时间<br>  $T_i &#x3D; C_i - A_i$</li>
+<li>例如，作业A 8:00提交，执行1小时，完成时间为10:00，则周转时间为2小时。</li>
+<li>平均周转时间 &#x3D; 所有作业的周转时间之和 &#x2F; 作业数<br>  $\bar{T} &#x3D; \sum_{i&#x3D;1}^{n} T_i &#x2F; n$</li>
+</ul>
+</li>
+</ol>
+<p><img src="/image/note2-1719063791898.png" alt="图 11">  </p>
+<h4 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h4><table>
+<thead>
+<tr>
+<th>算法</th>
+<th>公平性</th>
+<th>吞吐量</th>
+<th>及时性</th>
+<th>周转时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>先来先服务（FCFS）</td>
+<td>优</td>
+<td>低</td>
+<td>差</td>
+<td>长</td>
+</tr>
+</tbody></table>
+<h5 id="先来先服务（FCFS）——First-Come-First-Served"><a href="#先来先服务（FCFS）——First-Come-First-Served" class="headerlink" title="先来先服务（FCFS）——First Come First Served"></a>先来先服务（FCFS）——First Come First Served</h5><ul>
+<li>含义：按照作业提交的先后顺序进行调度。</li>
+</ul>
+<p><img src="/image/note2-1719063853880.png" alt="图 12">  </p>
+<p>优点：简单、可靠；容易理解；非抢占式。<br>缺点：平均等待时间长；不适合分时系统。</p>
+<p>例如，对于同时到达的三个作业 $j_1$、$j_2$、$j_3$，它们的到达时间分别为0、1、2，执行时间分别为20、20、4。则它们的周转时间分别为20、40、42。平均周转时间为34。这明显增长了平均周转时间。</p>
+<p>对于进程的调度，可以采用甘特图来描述：</p>
+<p><img src="/image/note2-1719064558945.png" alt="图 13">  </p>
+<h5 id="短进程优先（SPF）——Shortest-Process-First"><a href="#短进程优先（SPF）——Shortest-Process-First" class="headerlink" title="短进程优先（SPF）——Shortest Process First"></a>短进程优先（SPF）——Shortest Process First</h5><ul>
+<li>含义：按照作业的执行时间长短进行调度。也可以采用剥夺调度方式（Shortest Remaining Time First）。这种方式可以使平均等待时间最小。</li>
+</ul>
+<p><img src="/image/note2-1719064756679.png" alt="图 14">  </p>
+<p>对于上图中的四个作业：</p>
+<ul>
+<li>若采用非剥夺方式，可先画出甘特图，然后计算平均周转时间。各个进程等待时间为：0、6、3、7，平均等待时间为4。</li>
+<li>若采用剥夺方式，可先画出甘特图，然后计算平均周转时间。各个进程等待时间为：9、1、0、2，平均等待时间为3。</li>
+</ul>
+<p>虽然短进程优先算法可以减少平均等待时间，提高吞吐量，但是对长进程不公平，可能会导致长进程饥饿，也没有考虑到作业的优先级。同时，我们也需要考虑到进程的执行时间是难以预测的。</p>
+<h5 id="优先级调度（PS）——Priority-Scheduling"><a href="#优先级调度（PS）——Priority-Scheduling" class="headerlink" title="优先级调度（PS）——Priority Scheduling"></a>优先级调度（PS）——Priority Scheduling</h5><ul>
+<li>含义：按照作业的优先级进行调度。优先级高的作业先执行。具有相同优先级的作业按照FCFS的方式进行调度。</li>
+<li>优先级的确定：<ul>
+<li>运行前：根据作业的重要性、紧迫性、资源需求等确定优先级。</li>
+<li>运行中：<ul>
+<li>动态优先级：根据作业的等待时间、执行时间等动态调整优先级。</li>
+<li>静态优先级：作业提交时确定优先级，不再改变。一般赋予系统进程较高的优先级。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>优点：灵活、适应性强、实现简单、通过优先级动态调整可以平衡系统性能。</li>
+<li>问题：静态优先级法会导致无穷阻塞问题，即优先级高的进程会一直占用CPU，导致优先级低的进程无法执行。</li>
+<li>进程占用CPU的方式：<ul>
+<li><strong>非抢占式</strong>：进程一旦占用CPU，直到进程自己放弃CPU。FCFS。</li>
+<li><strong>抢占式</strong>：进程在运行时可能被强制中断，以便让其他进程占用CPU。会使进程频繁调度，增加系统开销。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/image/note2-1719065275315.png" alt="图 15">  </p>
+<p>上述平均等待时间为：**(6+0+16+18+1)&#x2F;5&#x3D;8.2**</p>
+<p><img src="/image/note2-1719065376932.png" alt="图 16">  </p>
+<p>上述平均等待时间为：**((1+5)+0+14+15+0)&#x2F;5&#x3D;7**</p>
+<h5 id="时间片轮转调度（RR）——Round-Robin"><a href="#时间片轮转调度（RR）——Round-Robin" class="headerlink" title="时间片轮转调度（RR）——Round Robin"></a>时间片轮转调度（RR）——Round Robin</h5><ul>
+<li>含义：按照时间片的方式进行调度。每个进程被分配一个时间片，当时间片用完后，进程被剥夺CPU，放回就绪队列，等待下一次调度。</li>
+</ul>
+<p><img src="/image/note2-1719065451457.png" alt="图 17">  </p>
+<ul>
+<li><strong>时间片</strong>：是指CPU分配给进程的最小时间单位。时间片的大小会影响进程的响应时间和系统的吞吐量。<ul>
+<li>固定时间片：所有进程都分配相同的时间片。</li>
+<li>动态时间片：根据进程的优先级、历史运行时间等动态调整时间片。</li>
+</ul>
+</li>
+<li><strong>时间片轮转调度</strong>的优点：<ul>
+<li>公平性：每个进程都有机会占用CPU。</li>
+<li>响应时间短：每个进程都有机会在一个时间片内执行。</li>
+<li>适用于分时系统：适用于多用户的分时系统，可以保证每个用户都有机会占用CPU。</li>
+</ul>
+</li>
+<li><strong>时间片轮转调度</strong>的缺点：<ul>
+<li>时间片过大：会导致进程响应时间长，退化为FCFS。</li>
+<li>时间片过小：会导致进程切换频繁，增加系统开销。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/image/note2-1719065539671.png" alt="图 18">  </p>
+<p>上述平均等待时间为：**((57+24)+20+(37+40+17)+(57+40))&#x2F;4&#x3D;73**</p>
+<h5 id="多级反馈队列调度（MFQ）——Multilevel-Feedback-Queue"><a href="#多级反馈队列调度（MFQ）——Multilevel-Feedback-Queue" class="headerlink" title="多级反馈队列调度（MFQ）——Multilevel Feedback Queue"></a>多级反馈队列调度（MFQ）——Multilevel Feedback Queue</h5><ul>
+<li>含义：按照多个队列的方式进行调度。每个队列有不同的优先级，不同的时间片。当进程在一个队列中等待时间过长时，会被移到下一个队列中。进程<strong>被调度执行</strong>后，在<strong>被剥夺或放弃处理机</strong>后而在就绪时可以<strong>改变其就绪队列</strong>。</li>
+</ul>
+<p><img src="/image/note2-1719065607216.png" alt="图 19">  </p>
+<p>设计另一个多级反馈队列调度算法的例子：</p>
+<ul>
+<li>以<strong>优先级</strong>设置多队列。</li>
+<li>各队列的调度算法采用<strong>FCFS+时间片</strong>。</li>
+<li>进程优先级升降原则是：<strong>等待CPU过久升，I&#x2F;O完成插入就绪队列时升，运行完一个完整时间片降</strong>…</li>
+<li>进程最初进入就绪队列以用户初置优先级为参数。</li>
+</ul>
+<h5 id="实时系统的调度算法"><a href="#实时系统的调度算法" class="headerlink" title="实时系统的调度算法"></a>实时系统的调度算法</h5><ul>
+<li>时钟驱动法：各任务的调度安排通常是在系统运行前就确定了。硬实时系统的任务是固定的和可知的。系统以规则的间隔时间调度任务执行。一个定时器被周期性地设置，时间到期后，系统启动要执行的任务。</li>
+<li>加权轮转法：进程的权就是分配给它的一小部分处理机时间。轮转时，不同的进程可以获得不同的处理机时间。广泛用在高速开关网的实时控制中。</li>
+</ul>
+<h5 id="作业调度算法——FIFO、SJF和最高响应比优先（HRRN）"><a href="#作业调度算法——FIFO、SJF和最高响应比优先（HRRN）" class="headerlink" title="作业调度算法——FIFO、SJF和最高响应比优先（HRRN）"></a>作业调度算法——FIFO、SJF和最高响应比优先（HRRN）</h5><p><img src="/image/note2-1719065913022.png" alt="图 20"> </p>
+<p><strong>响应比R</strong>定义如下： <strong>R &#x3D;(W+T)&#x2F;T &#x3D; 1+W&#x2F;T</strong>（W为作业等待时间，T作业估计运行时间）</p>
+<p>优点：结合了先来先服务、短作业优先的方法。优先运行短作业和等待时间足够长的长作业。</p>
+<h2 id="7-线程"><a href="#7-线程" class="headerlink" title="7. 线程"></a>7. 线程</h2><h3 id="线程的概念"><a href="#线程的概念" class="headerlink" title="线程的概念"></a>线程的概念</h3><h4 id="轻权进程（Lightweight-Process）"><a href="#轻权进程（Lightweight-Process）" class="headerlink" title="轻权进程（Lightweight Process）"></a>轻权进程（Lightweight Process）</h4><ul>
+<li>在前文中，提到引入进程实际上是为了实现作业内的作业步并发执行。但是同一作业进程之间会存在许多协作，需要进行频繁的数据交换。但是，每个进程都有自己独立的存储空间，互不干扰，会导致如果需要进行进程间的数据交换，那么就会调用系统调用，增加系统开销。</li>
+<li>为了方便进程间的数据交换，一种共享存储空间的机制被引入，即轻权进程。</li>
+</ul>
+<h4 id="线程的引入"><a href="#线程的引入" class="headerlink" title="线程的引入"></a>线程的引入</h4><ul>
+<li>随着共享内存多CPU计算机的发展，迫切需要加速单个作业步的运行速度，事实上同一个作业步的工作也是有可并行成份的。因为进程内程序执行的顺序性，不可能实现<strong>进程内可并行成分的并行执行</strong>。为此，线程的概念呼之欲出。在一个进程中可以包含多个可以并发（并行）执行的线程。系统按<strong>进程</strong>分配所有<strong>除CPU以外的系统资源</strong>（如内存，外设，文件等），而程序则依赖于线程运行，系统<strong>按线程分配CPU资源</strong>。</li>
+</ul>
+<h4 id="线程的定义"><a href="#线程的定义" class="headerlink" title="线程的定义"></a>线程的定义</h4><ul>
+<li><strong>线程</strong>：也叫轻权进程，是操作系统能够进行运算（处理机）调度的最小单位，是一个<strong>可执行实体</strong>。它被包含在进程之中，是进程中的实际运作单位。一个标准的线程由线程ID、当前指令指针、寄存器集合和堆栈组成。</li>
+<li>在引入线程后，线程便成为进程的组成成分，由进程创建，一个进程中至少有一个线程，即主线程。线程是进程的执行单元，一个进程中的多个线程共享进程的资源。</li>
+<li>进程仍然是系统资源分配的基本单位，线程只能在进程的上下文（地址空间）中运行。</li>
+<li>一个例子是，我们可以有一个进程，其中包含一个GUI线程、一个网络线程、一个I&#x2F;O线程等。它们分别处理不同的任务，但是共享进程的资源（如内存、文件等）。</li>
+<li>由于线程共享进程的资源（地址空间、可用数据），附带资源不多，创建和撤销线程的开销小，线程切换速度快。</li>
+</ul>
+<h4 id="线程的结构与特点"><a href="#线程的结构与特点" class="headerlink" title="线程的结构与特点"></a>线程的结构与特点</h4><p><img src="/image/note2-1719129457138.png" alt="图 21">  </p>
+<ul>
+<li>线程作为基本的调度单位，有与进程相似的状态：<strong>就绪、运行、阻塞</strong>等。</li>
+<li>同一进程中的所有线程都共享进程的存储空间和分配资源。</li>
+</ul>
+<p>线程由以下几部分组成：</p>
+<ul>
+<li><strong>线程ID</strong>：线程的唯一标识符。</li>
+<li><strong>寄存器组</strong>：表示处理机状态和运行现场的一组寄存器。</li>
+<li><strong>两个堆栈</strong>：分别用于用户态和核心态调用时进行参数传递。</li>
+<li><strong>程序计数器</strong>：指向下一条要执行的指令。</li>
+<li><strong>关联的进程和其他线程</strong>：线程是进程的一部分，一个进程中至少有一个线程。</li>
+</ul>
+<p>线程的优势：</p>
+<ul>
+<li>创建和撤消线程的开销非常小。不需要向系统请求独立的地址空间及进行相关的地址空间复制(例如父子进程)，因此创建和撤销线程系统的开销要远小于进程。</li>
+<li>切换迅速。线程的上下文环境要比进程简单的多，因此线程间的切换远比进程快的多。</li>
+<li>通信效率高。同一进程中的线程由于共享同一地址空间，通信时不需要借助内核功能。</li>
+<li>并发度高。在多处理机系统中，对进程的个数是有所限制的，但对线程的个数理论上不存在限制，更发挥了多处理机系统的优势。</li>
+</ul>
+<h4 id="与进程的比较"><a href="#与进程的比较" class="headerlink" title="与进程的比较"></a>与进程的比较</h4><ul>
+<li>拥有的资源：进程拥有独立的地址空间，线程共享进程的地址空间。</li>
+<li>调度：进程是系统资源分配的基本单位，线程是CPU调度的基本单位。</li>
+<li>并发性：进程之间、进程内的多线程之间可并发执行。</li>
+<li>安全性：同一进程的多线程共享进程的所有资源，一个线程可以改变另一个线程的数据，共享方便。</li>
+</ul>
+<h3 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h3><h4 id="用户级线程"><a href="#用户级线程" class="headerlink" title="用户级线程"></a>用户级线程</h4><p><img src="/image/note2-1719129925322.png" alt="图 22">  </p>
+<p>完全由用户来管理线程的切换，处理机在两个线程间切换时不用进入到核心态执行，节省了用户态与核心态之间切换的开销。不过，用户级线程的缺点是，当一个线程阻塞时，整个进程都会阻塞。</p>
+<h4 id="核心级线程"><a href="#核心级线程" class="headerlink" title="核心级线程"></a>核心级线程</h4><p><img src="/image/note2-1719130157061.png" alt="图 23">  </p>
+<p>核心可以调度一个进程中的多个线程同时运行，当某线程发生阻塞，可以调度其它线程执行。</p>
+<p>优点是充分发挥了多处理机的并行工作能力，但是在同一进程间线程控制权转移时，用户态和核心态之间的切换开销较大。</p>
+<p>与用户级线程的区别主要在于线程表的位置，用户级线程的线程表在用户空间，核心级线程的线程表在内核空间。</p>
+<h4 id="系统对于线程的支持"><a href="#系统对于线程的支持" class="headerlink" title="系统对于线程的支持"></a>系统对于线程的支持</h4><ul>
+<li><strong>用户级线程</strong>：线程的创建、撤销、切换等操作都由用户程序完成，系统不支持线程的调度。内核以进程为单位进行调度。一个线程阻塞，其依附的进程也阻塞。<ul>
+<li><strong>运行时系统</strong>：一个管理线程的过程集合，包括：thread_create、thread_exit、thread_wait。对于用户级线程，运行时系统是用户程序的一部分。</li>
+</ul>
+</li>
+<li><strong>核心级线程</strong>：有关线程的管理工作都由内核完成。应用程序通过系统调用来创建或撤销线程。Windows、Linux等操作系统支持核心级线程。</li>
+<li><strong>混合级线程</strong>：既支持用户级线程，也支持核心级线程。用户级多个线程对应核心级多个线程。当内核了解到一个线程阻塞后，通知运行时系统，重新调度其他线程。<ul>
+<li><img src="/image/note2-1719130563270.png" alt="图 26">  </li>
+<li>在这种模式下，处理机的调度程序看到的核心级线程可能对应着多个用户级线程。当一个用户级线程及对应核心级线程阻塞时，处理机的调度程序可以选择另一个核心级线程执行。</li>
+</ul>
+</li>
+<li>由于线程拥有较少的资源，又具有传统进程的许多特性，因此有的把线程叫做<strong>轻型进程</strong>。把传统的进程叫做<strong>重型进程</strong>。 <ul>
+<li>Linux，线程就是**轻量级进程(LightWeight Process)**。一个进程拥有一组共享其地址空间和资源的轻量级进程。Clone()函数创建进程时，系统同时为进程创建第一个线程。进程中的其它线程是通过调用线程创建原语显式创建的。</li>
+<li>Windows, 创建线程的函数 CreateThread(…,lpStartAddress,… )</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-进程的通信"><a href="#8-进程的通信" class="headerlink" title="8. 进程的通信"></a>8. 进程的通信</h2><ul>
+<li>什么是进程通信？<ul>
+<li>进程通信是指进程之间的信息交换和共享资源的过程。进程通信是操作系统中的一个重要概念，是多进程协作完成任务的基础。</li>
+</ul>
+</li>
+<li>分类：<ul>
+<li>按照交换信息量的多少：<ul>
+<li>低级通信：只能传递状态和整数值（控制信息）<ul>
+<li><img src="/image/note2-1719131093294.png" alt="图 27">  </li>
+<li>不过只能传递少量信息，效率低，如果需要传递大量信息，需要多次通信。同时，也会导致编程复杂，用户直接实现通信细节。</li>
+</ul>
+</li>
+<li>高级通信：提高信号通信效率，传递大量数据，减轻程序编制的复杂度<ul>
+<li><img src="/image/note2-1719132135194.png" alt="图 28"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>高级通信的三种方式：<ul>
+<li><strong>共享内存</strong>：多个进程共享同一块内存区域，进程间通过读写共享内存来实现通信。</li>
+<li><strong>消息传递</strong>：进程间通过发送消息来实现通信。</li>
+<li><strong>共享文件</strong>：多个进程共享同一文件，进程间通过读写文件来实现通信。</li>
+</ul>
+</li>
+</ul>
+<h3 id="两种基本进程通讯方法"><a href="#两种基本进程通讯方法" class="headerlink" title="两种基本进程通讯方法"></a>两种基本进程通讯方法</h3><ul>
+<li><strong>共享存储</strong>：相互通讯的进程有共享存储区.进程间可以通过直接读写共享存储区的变量来交互数据，同步与互斥在并发程序设计时安排进入程序。操作系统提供这样的共享存储区及同步互斥工具。</li>
+<li><strong>消息传递</strong>：通过操作系统的相应系统调用进行消息传递通讯。</li>
+</ul>
+<h4 id="共享内存模式-间接通信"><a href="#共享内存模式-间接通信" class="headerlink" title="共享内存模式(间接通信)"></a>共享内存模式(间接通信)</h4><ul>
+<li><strong>共享内存</strong>：是指两个或多个进程共享一个给定的存储区。这种通信方式是最快的一种通信方式，因为进程可以直接读写共享内存，不需要操作系统的介入。<ul>
+<li><img src="/image/note2-1719133007134.png" alt="图 29"></li>
+</ul>
+</li>
+<li>内存共享区的互斥要通过其它机制实现；数据的发送方不关心数据由谁接收，数据的接收方也不关心数据是由谁发送的，存在安全隐患。</li>
+</ul>
+<h4 id="消息传递模式"><a href="#消息传递模式" class="headerlink" title="消息传递模式"></a>消息传递模式</h4><ul>
+<li><strong>消息传递</strong>：<ul>
+<li>直接通信方式：点到点的发送<ul>
+<li>Send (DestProcessName, Message)；<br>Receive (SourceProcessName, Message)；</li>
+<li>进程在发送和接收消息时直接指明接收者或发送者进程ID。</li>
+<li>必须指定接收者或发送者的ID，不适合多对多通信。</li>
+</ul>
+</li>
+<li>间接通信方式：通过消息队列传递消息（信箱）<ul>
+<li>Send (MailBox, Message)；<br>Receive (MailBox, Message)；</li>
+<li>系统为每个信箱设一个消息队列，消息发送和接收都指向该消息队列。</li>
+<li>很容易建立双向通讯链(只要对信箱说明为读写打开)。；不过必须有一个通讯双方共享的一个<strong>逻辑消息队列</strong>（ UNIX的PIPE，FIFO及IPC消息传递机制都属于这种形式），使用时消息发送者约定写方式打开信箱,消息接收者约定读方式打开信箱或同时读写打开。</li>
+<li><img src="/image/note2-1719133445875.png" alt="图 30"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="进程消息传递通信实现"><a href="#进程消息传递通信实现" class="headerlink" title="进程消息传递通信实现"></a>进程消息传递通信实现</h5><p>直接通信消息系统，两个基本操作为：</p>
+<ul>
+<li><p><strong>Send(&amp;A)：&amp;A</strong>指向含接收者pid和消息正文的空间。</p>
+</li>
+<li><p><strong>Receive(&amp;A)：&amp;A</strong>指向缓冲区用于接收消息，该系统调用函数返回值是消息发送者pid。</p>
+</li>
+<li><p>实现：</p>
+<ul>
+<li>系统有一空闲缓冲区池，每个进程有一个消息缓冲队列。缓冲区用于存放消息及消息发送者pid和消息链(用pid定位进程PCB表)。</li>
+<li>每个进程的消息队列存放发送给该进程的消息，队列头存于<strong>PCB</strong>中，同时在PCB中设一互斥信号量<strong>mutex(初值为1)<strong>和</strong>信号量Sm（初值为0）</strong>，Sm用于记录消息队列中的消息数。</li>
+<li><img src="/image/note2-1719133730050.png" alt="图 31">  </li>
+<li><img src="/image/note2-1719133784108.png" alt="图 32">  </li>
+<li>实际流程是，发送进程使用发送原语向接收进程发送消息，发送的消息会被放入接收进程的消息队列中，接收进程使用接收原语接收消息。这里面存在的临界资源是<strong>消息队列</strong>，需要使用互斥信号量进行保护。</li>
+</ul>
+</li>
+<li><p>发送原语类C伪代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Send(&amp;A): </span><br><span class="line">  &#123;</span><br><span class="line">    New(&amp;p)；从空缓冲区队列得一个buffer</span><br><span class="line">    ...</span><br><span class="line">    置sender’s pid；</span><br><span class="line">    将A中消息送buffer p；</span><br><span class="line">    获得A中Receiver’s pid；</span><br><span class="line">    P(mutex)；</span><br><span class="line">    将buffer p挂入相应的消息队列；</span><br><span class="line">    V(Sm)；</span><br><span class="line">    V(mutex)；</span><br><span class="line">  &#125;；</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接收原语类C伪代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Receive(&amp;A)：</span><br><span class="line">  &#123;</span><br><span class="line">    P(Sm)；<span class="comment">//消耗一个消息</span></span><br><span class="line">    P(mutex)；<span class="comment">//互斥信号量</span></span><br><span class="line">    从本进程的消息队列取一个buffer f；</span><br><span class="line">    V(mutex)；<span class="comment">//释放互斥信号量</span></span><br><span class="line">    从buffer f中取得消息正文送A,并得到   </span><br><span class="line">    sender’s pid作为Receive( )的返回值；</span><br><span class="line">    ...</span><br><span class="line">    dispose(f)；#释放buffer f到空缓冲队列</span><br><span class="line">    …</span><br><span class="line">  &#125;；</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>需要注意的是，上面提到的<strong>new,dispose</strong>函数对<strong>空缓冲<br>区池</strong>的访问也需要互斥。</p>
+<h5 id="提高并发性：将一个共享资源分解为多个更小的共享资源"><a href="#提高并发性：将一个共享资源分解为多个更小的共享资源" class="headerlink" title="提高并发性：将一个共享资源分解为多个更小的共享资源"></a>提高并发性：将一个共享资源分解为多个更小的共享资源</h5><p>将原来的生产者消费者问题的共享资源–缓冲池（含满、空缓冲区队列），变为n（n个进程满缓冲区队列）+1（空缓冲区队列）个共享资源。</p>
+<h3 id="管道通信"><a href="#管道通信" class="headerlink" title="管道通信"></a>管道通信</h3><p>是一种信息流缓冲机构， UNIX系统中管道基于<strong>文件系统</strong>，在内核中通过<strong>文件描述符</strong>表示。管道以<strong>先进先出(FIFO)方式</strong>组织数据传输。</p>
+<p><img src="/image/note2-1719134308101.png" alt="图 33">  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//调用pipe()函数创建管道</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pipe</span><span class="params">(<span class="type">int</span> fd[<span class="number">2</span>])</span>; </span><br><span class="line">  <span class="comment">// fd[0]为管道里的读取端</span></span><br><span class="line">  <span class="comment">// fd[1]则为管道的写入端。 </span></span><br><span class="line"><span class="comment">//通过write()函数写入信息</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">write</span> <span class="params">(<span class="type">int</span> handle,<span class="type">char</span> *buf,<span class="type">unsigned</span> len)</span></span><br><span class="line"><span class="comment">//进程通过read()函数读取信息</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">read</span> <span class="params">(<span class="type">int</span> handle,<span class="type">void</span> *buf,<span class="type">unsigned</span> len)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="管道的特点"><a href="#管道的特点" class="headerlink" title="管道的特点"></a>管道的特点</h4><ul>
+<li>管道是一种<strong>半双工通信</strong>方式，数据只能单向流动，只能在一个方向上进行通信。如果进程间要进行双向通信，通常需要定义两个管道。</li>
+<li>管道通过<strong>文件描述符</strong>进行通信，因此可以使用**read()<strong>和</strong>write()**函数进行通信。</li>
+</ul>
+<h4 id="管道的分类"><a href="#管道的分类" class="headerlink" title="管道的分类"></a>管道的分类</h4><ul>
+<li><strong>匿名管道</strong>：只能用于具有<strong>亲缘关系</strong>的进程间通信，通常在一个进程创建子进程后使用。管道能够把信息从一个进程的地址空间拷贝到另一个进程的地址空间。</li>
+<li><strong>命名管道</strong>：允许无亲缘关系的进程间通信，也称为FIFO。FIFO是一种文件类型，它在文件系统中有对应的文件名。FIFO可以通过文件系统调用来创建和打开。命名管道有自己的名字和访问权限的限制，就像一个文件一样。它可以用于不相关进程间的通信，进程通过使用管道的名字获得管道。</li>
+</ul>
+<h4 id="管道的实现"><a href="#管道的实现" class="headerlink" title="管道的实现"></a>管道的实现</h4><p>管道的工作原理如下：</p>
+<ol>
+<li>创建管道：操作系统提供了创建管道的系统调用。当一个管道被创建时，它会创建两个文件描述符：一个用于读取，另一个用于写入。</li>
+<li>数据传输：写进程可以通过写文件描述符向管道中写入数据，而读进程则可以通过读文件描述符从管道中读取数据。写入管道的数据会被缓存，直到被读取。</li>
+<li>数据拷贝：当数据被写入管道时，操作系统会将数据从写进程的地址空间拷贝到内核缓冲区；当读进程从管道读取数据时，操作系统再将数据从内核缓冲区拷贝到读进程的地址空间。这样，就实现了从一个进程的地址空间到另一个进程的地址空间的数据传输。</li>
+<li>管道的关闭：当不再需要通信时，进程可以关闭管道的读写文件描述符。如果写端被关闭，读端读取完所有数据后会接收到文件结束符（EOF）；如果读端被关闭，写端写入数据时会收到一个SIGPIPE信号。</li>
+</ol>
+<h2 id="9-易错点"><a href="#9-易错点" class="headerlink" title="9. 易错点"></a>9. 易错点</h2><ol>
+<li><p>并发进程执行的相对速度与进程调度策略有关，因为进程调度策略决定了哪些进程可以获得处理机，以及获得处理机的时间长短，从而影响进程执行的速度和效率。</p>
+</li>
+<li><p>一个进程可以顺序地执行一个或多个程序，只要在执行过程中改变其CPU状态和内存空间即可，但不能同时执行多个程序</p>
+</li>
+<li><p>用户登录时，操作系统会为用户创建一个登录进程，用于验证用户身份和提供用户界面。<strong>高级调度即作业调度</strong>，会从后备队列上选择一个作业调入内存，并为之创建相应的进程。<strong>操作系统响应用户提出的请求时，通常会为用户创建一个子进程，用于执行用户指定的任务或程序。</strong>用户打开一个浏览器程序时，也是一种操作系统响应用户请求的情况，同样会创建一个新进程。</p>
+</li>
+<li><p>I&#x2F;O操作完成之前进程在等待结果，状态为阻塞态：完成后进程等待事件就绪，变为就绪态。</p>
+</li>
+<li><p>线程的优点有提高系统并发性、节约系统资源、便于进程通信等，但线程并不能增强进程安全性，因为线程共享进程的地址空间和资源，若一个线程出错，则可能影响整个进程的运行。</p>
+</li>
+<li><p>在内核级线程中，同一进程中的线程切换，需要从用户态转到核心态进行，系统开销较大。不能认为使用了内核级线程就可以提高系统性能。</p>
+</li>
+<li><p><strong>一对一模型</strong>和<strong>多对多模型</strong>能充分利用内核级线程，发挥多处理机的优势，能同时调度同一个进程中的多个线程并发执行，具有较好的并发性。</p>
+</li>
+<li><p>普通管道只允许<strong>单向通信</strong>，数据只能往一个方向流动，要实现双向数据传输，就需要定义两个方向相反的管道。<strong>管道是一种存储在内存中的、固定大小的缓冲区，管道的大小通常为内存的一页</strong>，其大小并不是受磁盘容量大小的限制。由于管道的读&#x2F;写操作都可能遇到缓冲区满或空的情况，当管道满时，写操作会被阻塞，直到有数据读出；而当管道空时，读操作会被阻塞，直到有数据写入。<strong>一个管道可以有多个读进程或多个写进程对其进行操作</strong>，但是这会增加数据竞争和混乱的风险，为了避免这种情况，<strong>应使用互斥锁或信号量等同步机制</strong>来保证每次只有一个进程对管道进行读或写操作。</p>
+</li>
+<li><p>为何进程之间的通信必须借助操作系统的内核功能？</p>
+<ul>
+<li>每个进程有自己<strong>独立的地址空间</strong>。在操作系统和硬件的地址保护机制下，进程无法访问其他进程的地址空间，必须借助于系统调用函数实现进程之间的通信。</li>
+</ul>
+</li>
+<li><p>什么是多线程？与多任务由什么区别？</p>
+<ul>
+<li>多线程是指在<strong>一个程序中可以定义多个线程并同时运行它们</strong>，每个线程可以执行不同的任务。<strong>多线程与多任务的区别：</strong>多任务是针对操作系统而言的，代表操作系统可以同时执行的程序个数：多线程是针对一个程序而言的，代表一个程序可以同时执行的线程个数，而每个线程可以完成不同的任务。</li>
+</ul>
+</li>
+<li><p>为什么要进行CPU调度？</p>
+<ul>
+<li>如果没有CPU调度，那么一个进程会一直占用CPU直到进程结束，这样会导致其他进程无法获得CPU资源，从而无法执行。而在该进程执行过程中，还可能会发生I&#x2F;O操作等等产生阻塞，这样会导致CPU资源的浪费。因此，CPU调度是为了合理分配CPU资源，提高CPU的利用率。</li>
+</ul>
+</li>
+<li><p>设计调度算法时应考虑的指标有很多，比较常见的有公平性、资源利用率、平均周转时间平均等待时间、平均响应时间。<strong>互斥性不是调度算法设计时需要考虑的指标，而是一种同步机制，用来保证多个进程访问临界资源时不会发生冲突。</strong></p>
+</li>
+<li><p>处于临界区的进程也可能因中断或抢占而导致调度。此外，若进程在临界区内请求的是一个需要等待的资源，比如打印机，则它主动放弃CPU,让其他进程运行。</p>
+</li>
+<li><p><strong>FCFS</strong>调度算法比较有利于<strong>长作业</strong>，而不利于短作业。CPU繁忙型作业是指该类作业需要占用很长的CPU时间，而很少请求I&#x2F;O操作，因此<strong>CPU繁忙型作业类似于长作业</strong>，采用FCFS可从容完成计算。<strong>I&#x2F;O繁忙型作业</strong>是指作业执行时需频繁请求I&#x2F;O操作，即<strong>可能频繁放弃CPU</strong>,所以占用CPU的时间不会太长，一旦放弃CPU,则必须重新排队等待调度，故采用SJF比较适合。时间片轮转法对于短作业和长作业的时间片都一样，所以地位也几乎一样。优先级调度有利于优先级高的进程，而优先级和作业时间长度是没有必然联系的。</p>
+</li>
+<li><p>实时系统必须能足够及时地处理某些紧急的外部事件，因此普遍用高优先级，并用“可抢占”来确保实时处理。</p>
+</li>
+<li><p><strong>优先级算法中，I&#x2F;O繁忙型作业要优于计算繁忙型作业</strong>，系统进程的优先权应高于用户进程的优先权。作业的优先权与长作业、短作业或系统资源要求的多少没有必然的关系。在动态优先权中，<strong>随着进程执行时间的增加其优先权随之降低，随着作业等待时间的增加其优先权相应上升。</strong></p>
+</li>
+<li><p><strong>多级反馈队列调度算法能较好地满足各种类型用户的需要</strong>。对<strong>终端型作业</strong>用户而言，由于它们提交的作业大多属于交互型作业，作业通常比较短小，系统只要能使这些作业在第1级队列所规定的时间片内完成，便可使终端型作业用户感到满意：对于<strong>短批处理作业</strong>用户而言，它们的作业开始时像终端型作业一样，若仅在第1级队列中执行一个时间片即可完成，便可获得与终端型作业一样的响应时间，对于稍长的作业，通常也只需要在第2级队列和第3级队列中各执行一个时间片即可完成，其周转时间仍然较短：对于<strong>长批处理作业</strong>用户而言，它们的长作业将依次在第1,2，…，级队列中运行，然后按时间片轮转方式运行，用户不必担心其作业长期得不到处理。</p>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a><a class="post-meta__tags" href="/tags/%E8%BF%9B%E7%A8%8B/">进程</a></div><div class="post_share"><div class="social-share" data-image="/img/header.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/06/23/note2-2/" title="操作系统笔记2——进程并发、同步与互斥"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">操作系统笔记2——进程并发、同步与互斥</div></div></a></div><div class="next-post pull-right"><a href="/2024/06/21/note1/" title="操作系统笔记1——操作系统结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">操作系统笔记1——操作系统结构</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/06/24/note2-3/" title="操作系统笔记2——进程死锁"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-24</div><div class="title">操作系统笔记2——进程死锁</div></div></a></div><div><a href="/2024/06/23/note2-2/" title="操作系统笔记2——进程并发、同步与互斥"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-23</div><div class="title">操作系统笔记2——进程并发、同步与互斥</div></div></a></div><div><a href="/2024/06/21/note1/" title="操作系统笔记1——操作系统结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-21</div><div class="title">操作系统笔记1——操作系统结构</div></div></a></div><div><a href="/2024/02/15/os-lab-1/" title="os_lab_1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-15</div><div class="title">os_lab_1</div></div></a></div><div><a href="/2024/02/15/6.S081-note-lec1/" title="6.S081-note-lec1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-15</div><div class="title">6.S081-note-lec1</div></div></a></div><div><a href="/2024/06/24/note3-1/" title="操作系统笔记3——存储管理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-24</div><div class="title">操作系统笔记3——存储管理</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/header.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Lee</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/lazybearlee"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/lazybearlee" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">操作系统笔记2——进程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">1. 进程的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 进程的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E5%92%8C%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">程序和进程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Program-Counter"><span class="toc-number">1.1.1.1.1.</span> <span class="toc-text">Program Counter</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Process-In-Memory"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">Process In Memory</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">并发的进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%87%E6%8D%A2"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">进程的切换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.5.</span> <span class="toc-text">进程的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A%E4%B8%8E%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.1.6.</span> <span class="toc-text">作业与进程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 进程的状态</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%BD%95%E6%97%B6%E7%A6%BB%E5%BC%80CPU"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">进程何时离开CPU</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">进程状态的转换</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%8C%82%E8%B5%B7"><span class="toc-number">1.1.2.2.1.</span> <span class="toc-text">进程挂起</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%9B%BE"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">进程状态的转换图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA%E4%B8%8E%E7%BB%93%E6%9D%9F"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">进程的创建与结束</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">3. 进程的描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">3.1 进程的组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%9D%97%EF%BC%88PCB%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">3.2 进程控制块（PCB）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PCB%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">PCB的结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PCB%E7%9A%84%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">PCB的管理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%84%E7%BB%87"><span class="toc-number">1.3.</span> <span class="toc-text">4. 进程的组织</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%8E%A7%E5%88%B6"><span class="toc-number">1.4.</span> <span class="toc-text">5. 进程的控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E6%8A%80%E6%9C%AF"><span class="toc-number">1.4.1.</span> <span class="toc-text">中断技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E6%BA%90"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">中断源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">中断处理过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%9D%83%E6%8C%87%E4%BB%A4%E4%B8%8E%E9%9D%9E%E7%89%B9%E6%9D%83%E6%8C%87%E4%BB%A4"><span class="toc-number">1.4.2.</span> <span class="toc-text">特权指令与非特权指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">1.4.3.</span> <span class="toc-text">模式切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%8E%A7%E5%88%B6"><span class="toc-number">1.4.4.</span> <span class="toc-text">进程的控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E8%AF%AD%EF%BC%88Primitive%EF%BC%89"><span class="toc-number">1.4.5.</span> <span class="toc-text">原语（Primitive）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.4.5.1.</span> <span class="toc-text">创建原语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.4.5.2.</span> <span class="toc-text">撤销原语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.4.5.3.</span> <span class="toc-text">阻塞原语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%94%A4%E9%86%92%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.4.5.4.</span> <span class="toc-text">唤醒原语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%B5%B7%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.4.5.5.</span> <span class="toc-text">挂起原语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%8C%82%E5%8E%9F%E8%AF%AD"><span class="toc-number">1.4.5.6.</span> <span class="toc-text">解挂原语</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%89%A7%E8%A1%8C"><span class="toc-number">1.4.6.</span> <span class="toc-text">进程执行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%B0%83%E5%BA%A6"><span class="toc-number">1.5.</span> <span class="toc-text">6. 进程的调度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B"><span class="toc-number">1.5.1.</span> <span class="toc-text">进程切换过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PlantUML-%E7%BB%98%E5%9B%BE"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">PlantUML 绘图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E8%A7%A3%E9%87%8A"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">实例解释</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BB%8E%E8%BF%9B%E7%A8%8BA%E5%88%87%E6%8D%A2%E5%88%B0%E8%BF%9B%E7%A8%8BB"><span class="toc-number">1.5.1.2.1.</span> <span class="toc-text">示例：从进程A切换到进程B</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%9A%84%E5%90%AB%E4%B9%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">调度的含义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B0%83%E5%BA%A6"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">什么是调度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%A0%E4%B8%AA%E4%B8%8D%E5%90%8C%E7%9A%84%E8%B0%83%E5%BA%A6%E4%BE%8B%E5%AD%90"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">几个不同的调度例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">1.5.2.3.</span> <span class="toc-text">进程调度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="toc-number">1.5.3.</span> <span class="toc-text">进程调度的功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.5.3.1.</span> <span class="toc-text">进程上下文</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E6%96%B9%E5%BC%8F"><span class="toc-number">1.5.4.</span> <span class="toc-text">进程调度方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E8%B5%B7%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%9B%A0%E7%B4%A0"><span class="toc-number">1.5.5.</span> <span class="toc-text">引起进程调度因素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E4%B8%8E%E5%88%87%E6%8D%A2%E6%97%B6%E6%9C%BA"><span class="toc-number">1.5.6.</span> <span class="toc-text">进程调度与切换时机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.7.</span> <span class="toc-text">进程调度算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E5%9B%A0%E7%B4%A0"><span class="toc-number">1.5.7.1.</span> <span class="toc-text">调度算法评价因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.7.2.</span> <span class="toc-text">调度算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%88%E6%9D%A5%E5%85%88%E6%9C%8D%E5%8A%A1%EF%BC%88FCFS%EF%BC%89%E2%80%94%E2%80%94First-Come-First-Served"><span class="toc-number">1.5.7.2.1.</span> <span class="toc-text">先来先服务（FCFS）——First Come First Served</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%9F%AD%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%EF%BC%88SPF%EF%BC%89%E2%80%94%E2%80%94Shortest-Process-First"><span class="toc-number">1.5.7.2.2.</span> <span class="toc-text">短进程优先（SPF）——Shortest Process First</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E8%B0%83%E5%BA%A6%EF%BC%88PS%EF%BC%89%E2%80%94%E2%80%94Priority-Scheduling"><span class="toc-number">1.5.7.2.3.</span> <span class="toc-text">优先级调度（PS）——Priority Scheduling</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%89%87%E8%BD%AE%E8%BD%AC%E8%B0%83%E5%BA%A6%EF%BC%88RR%EF%BC%89%E2%80%94%E2%80%94Round-Robin"><span class="toc-number">1.5.7.2.4.</span> <span class="toc-text">时间片轮转调度（RR）——Round Robin</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E5%8F%8D%E9%A6%88%E9%98%9F%E5%88%97%E8%B0%83%E5%BA%A6%EF%BC%88MFQ%EF%BC%89%E2%80%94%E2%80%94Multilevel-Feedback-Queue"><span class="toc-number">1.5.7.2.5.</span> <span class="toc-text">多级反馈队列调度（MFQ）——Multilevel Feedback Queue</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9E%E6%97%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.7.2.6.</span> <span class="toc-text">实时系统的调度算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94FIFO%E3%80%81SJF%E5%92%8C%E6%9C%80%E9%AB%98%E5%93%8D%E5%BA%94%E6%AF%94%E4%BC%98%E5%85%88%EF%BC%88HRRN%EF%BC%89"><span class="toc-number">1.5.7.2.7.</span> <span class="toc-text">作业调度算法——FIFO、SJF和最高响应比优先（HRRN）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.6.</span> <span class="toc-text">7. 线程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">1.6.1.</span> <span class="toc-text">线程的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%BB%E6%9D%83%E8%BF%9B%E7%A8%8B%EF%BC%88Lightweight-Process%EF%BC%89"><span class="toc-number">1.6.1.1.</span> <span class="toc-text">轻权进程（Lightweight Process）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%BC%95%E5%85%A5"><span class="toc-number">1.6.1.2.</span> <span class="toc-text">线程的引入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.6.1.3.</span> <span class="toc-text">线程的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%BB%93%E6%9E%84%E4%B8%8E%E7%89%B9%E7%82%B9"><span class="toc-number">1.6.1.4.</span> <span class="toc-text">线程的结构与特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">1.6.1.5.</span> <span class="toc-text">与进程的比较</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.6.2.</span> <span class="toc-text">线程的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.6.2.1.</span> <span class="toc-text">用户级线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BA%A7%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.6.2.2.</span> <span class="toc-text">核心级线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%AF%B9%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%94%AF%E6%8C%81"><span class="toc-number">1.6.2.3.</span> <span class="toc-text">系统对于线程的支持</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1"><span class="toc-number">1.7.</span> <span class="toc-text">8. 进程的通信</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%9F%BA%E6%9C%AC%E8%BF%9B%E7%A8%8B%E9%80%9A%E8%AE%AF%E6%96%B9%E6%B3%95"><span class="toc-number">1.7.1.</span> <span class="toc-text">两种基本进程通讯方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E6%A8%A1%E5%BC%8F-%E9%97%B4%E6%8E%A5%E9%80%9A%E4%BF%A1"><span class="toc-number">1.7.1.1.</span> <span class="toc-text">共享内存模式(间接通信)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.7.1.2.</span> <span class="toc-text">消息传递模式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.7.1.2.1.</span> <span class="toc-text">进程消息传递通信实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%90%E9%AB%98%E5%B9%B6%E5%8F%91%E6%80%A7%EF%BC%9A%E5%B0%86%E4%B8%80%E4%B8%AA%E5%85%B1%E4%BA%AB%E8%B5%84%E6%BA%90%E5%88%86%E8%A7%A3%E4%B8%BA%E5%A4%9A%E4%B8%AA%E6%9B%B4%E5%B0%8F%E7%9A%84%E5%85%B1%E4%BA%AB%E8%B5%84%E6%BA%90"><span class="toc-number">1.7.1.2.2.</span> <span class="toc-text">提高并发性：将一个共享资源分解为多个更小的共享资源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E9%80%9A%E4%BF%A1"><span class="toc-number">1.7.2.</span> <span class="toc-text">管道通信</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">1.7.2.1.</span> <span class="toc-text">管道的特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">1.7.2.2.</span> <span class="toc-text">管道的分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.7.2.3.</span> <span class="toc-text">管道的实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">1.8.</span> <span class="toc-text">9. 易错点</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/24/note2-3/" title="操作系统笔记2——进程死锁">操作系统笔记2——进程死锁</a><time datetime="2024-06-24T13:09:11.000Z" title="发表于 2024-06-24 21:09:11">2024-06-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/24/note3-1/" title="操作系统笔记3——存储管理">操作系统笔记3——存储管理</a><time datetime="2024-06-24T13:09:11.000Z" title="发表于 2024-06-24 21:09:11">2024-06-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/23/note2-2/" title="操作系统笔记2——进程并发、同步与互斥">操作系统笔记2——进程并发、同步与互斥</a><time datetime="2024-06-23T12:24:35.000Z" title="发表于 2024-06-23 20:24:35">2024-06-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/22/note2-1/" title="操作系统笔记2——进程">操作系统笔记2——进程</a><time datetime="2024-06-22T07:24:35.000Z" title="发表于 2024-06-22 15:24:35">2024-06-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/21/note1/" title="操作系统笔记1——操作系统结构">操作系统笔记1——操作系统结构</a><time datetime="2024-06-21T13:10:35.000Z" title="发表于 2024-06-21 21:10:35">2024-06-21</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Lee</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.12.0"></script></div></div></body></html>
